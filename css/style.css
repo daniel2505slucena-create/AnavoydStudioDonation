@@ -1,27 +1,19 @@
 :root {
-    /* Paleta Cyberpunk Dark */
     --bg-base: #030305;
     --panel-bg: rgba(10, 10, 15, 0.85);
     --panel-border: #1a1a24;
     
-    /* Cores Neon */
     --neon-green: #39ff14;
-    --neon-green-glow: rgba(57, 255, 20, 0.4);
+    --neon-green-glow: rgba(57, 255, 20, 0.2);
     --neon-purple: #b026ff;
-    --neon-purple-glow: rgba(176, 38, 255, 0.4);
+    --neon-purple-glow: rgba(176, 38, 255, 0.2);
     --alert-red: #ff2a2a;
-    --alert-red-glow: rgba(255, 42, 42, 0.4);
     
-    /* Tipografia */
     --text-main: #e0e6ed;
     --text-muted: #6b7280;
 }
 
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
     background-color: var(--bg-base);
@@ -33,9 +25,11 @@ body {
     overflow-x: hidden;
 }
 
-/* =========================================
-   EFEITOS CRT E ATMOSFERA
-   ========================================= */
+/* Utilitários JS */
+.hidden { display: none !important; }
+.disabled { opacity: 0.3; pointer-events: none; filter: grayscale(100%); }
+
+/* CRT Overlay */
 .crt-overlay {
     position: fixed;
     top: 0; left: 0; width: 100vw; height: 100vh;
@@ -59,13 +53,12 @@ body {
     100% { background-position: 0 100vh; }
 }
 
-/* =========================================
-   LAYOUT PRINCIPAL
-   ========================================= */
+/* Layout preenchendo mais a tela */
 .terminal-container {
-    max-width: 1200px;
+    width: 95%; /* Ajustado para preencher a tela */
+    max-width: 1600px;
     margin: 0 auto;
-    padding: 2rem;
+    padding: 2rem 0;
     position: relative;
     z-index: 10;
 }
@@ -84,16 +77,14 @@ body {
     content: '';
     position: absolute;
     bottom: -1px; left: 0;
-    width: 30%;
-    height: 1px;
+    width: 250px;
+    height: 2px;
     background: var(--neon-purple);
-    box-shadow: 0 0 10px var(--neon-purple);
 }
 
 .brand-img {
-    width: 160px;
-    filter: drop-shadow(0 0 5px var(--neon-purple));
-    opacity: 0.9;
+    width: 180px;
+    filter: drop-shadow(0 0 5px var(--neon-purple-glow));
 }
 
 .auth-box {
@@ -108,71 +99,45 @@ body {
 .status-indicator {
     width: 8px;
     height: 8px;
-    background-color: var(--alert-red);
     border-radius: 50%;
-    box-shadow: 0 0 8px var(--alert-red);
-    animation: pulse 2s infinite;
 }
+.status-indicator.offline { background-color: var(--alert-red); box-shadow: 0 0 8px var(--alert-red); animation: pulse 2s infinite; }
+.status-indicator.online { background-color: var(--neon-green); box-shadow: 0 0 8px var(--neon-green); }
 
-.sys-text {
-    color: var(--text-muted);
-    font-weight: 700;
-}
+.sys-text { color: var(--text-muted); font-weight: 700; }
+.sys-text.online-text { color: var(--neon-green); }
 
-/* =========================================
-   PAINÉIS CYBERPUNK (CARDS)
-   ========================================= */
+/* Painéis Cyberpunk */
 .cyber-panel {
     background: var(--panel-bg);
     border: 1px solid var(--panel-border);
     padding: 1.5rem;
     position: relative;
     backdrop-filter: blur(4px);
-    /* Canto superior direito e inferior esquerdo cortados */
     clip-path: polygon(0 0, calc(100% - 15px) 0, 100% 15px, 100% 100%, 15px 100%, 0 calc(100% - 15px));
 }
 
-.cyber-panel::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0;
-    width: 4px;
-    height: 100%;
-    background: var(--neon-green);
-    box-shadow: 0 0 10px var(--neon-green-glow);
-}
-
-.highlight-panel::before {
-    background: var(--neon-purple);
-    box-shadow: 0 0 10px var(--neon-purple-glow);
-}
+.block-green { border-left: 4px solid var(--neon-green); }
+.block-purple { border-left: 4px solid var(--neon-purple); }
 
 .grid-layout {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    grid-template-columns: 1fr 1fr;
     gap: 2rem;
 }
 
 .card { margin-bottom: 2rem; }
 
-/* =========================================
-   TIPOGRAFIA E TEXTOS
-   ========================================= */
 h2, h3 {
     font-family: 'Rajdhani', sans-serif;
     font-weight: 700;
     letter-spacing: 2px;
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
     color: var(--text-main);
 }
 
-.panel-title {
-    font-size: 1.5rem;
-    text-shadow: 0 0 5px rgba(255,255,255,0.3);
-}
-
-.highlight-purple { color: var(--neon-purple); text-shadow: 0 0 8px var(--neon-purple-glow); }
-.highlight-green { color: var(--neon-green); text-shadow: 0 0 8px var(--neon-green-glow); }
+.highlight-purple { color: var(--neon-purple); }
+.highlight-green { color: var(--neon-green); }
 
 .cursor {
     display: inline-block;
@@ -184,13 +149,8 @@ h2, h3 {
     margin-left: 5px;
 }
 
-/* =========================================
-   BARRA DE PROGRESSO
-   ========================================= */
-.progress-card {
-    margin-bottom: 2rem;
-    padding: 2rem;
-}
+/* Barra Progresso */
+.progress-card { margin-bottom: 2rem; padding: 2rem; }
 
 .bar-container {
     position: relative;
@@ -204,22 +164,14 @@ h2, h3 {
 .bar-track {
     position: absolute;
     top: 0; left: 0; width: 100%; height: 100%;
-    background: repeating-linear-gradient(
-        45deg,
-        transparent,
-        transparent 10px,
-        rgba(255, 255, 255, 0.03) 10px,
-        rgba(255, 255, 255, 0.03) 20px
-    );
+    background: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255, 255, 255, 0.03) 10px, rgba(255, 255, 255, 0.03) 20px);
 }
 
 .bar-fill {
     height: 100%;
     background: var(--neon-green);
-    width: 0%;
     position: relative;
-    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 0 15px var(--neon-green-glow);
+    transition: width 0.5s ease-out;
 }
 
 .meta-stats {
@@ -229,9 +181,7 @@ h2, h3 {
     font-weight: 700;
 }
 
-/* =========================================
-   BOTÕES E INTERAÇÕES
-   ========================================= */
+/* Botões */
 .cyber-btn {
     background: transparent;
     border: 1px solid var(--panel-border);
@@ -240,22 +190,17 @@ h2, h3 {
     text-transform: uppercase;
     cursor: pointer;
     transition: all 0.2s ease;
-    position: relative;
 }
 
-.auth-btn {
-    color: var(--text-muted);
-    text-decoration: none;
-    padding: 0.2rem 0.5rem;
-}
-
-.auth-btn:hover { color: var(--neon-purple); text-shadow: 0 0 8px var(--neon-purple-glow); }
+.auth-btn { border: none; padding: 0.2rem 0.5rem; color: var(--text-muted); }
+.auth-btn:hover { color: var(--neon-purple); }
 
 .pix-btns {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 10px;
     margin-top: 1.5rem;
+    transition: all 0.3s ease;
 }
 
 .btn-pix {
@@ -265,34 +210,20 @@ h2, h3 {
 }
 
 .btn-pix:hover {
-    background: var(--neon-green);
-    color: var(--bg-base);
-    box-shadow: 0 0 15px var(--neon-green-glow);
+    background: rgba(57, 255, 20, 0.1);
     border-color: var(--neon-green);
 }
 
-.btn-pix.custom {
-    color: var(--neon-purple);
-    border-color: rgba(176, 38, 255, 0.3);
-}
+.btn-pix.custom { color: var(--neon-purple); border-color: rgba(176, 38, 255, 0.3); }
+.btn-pix.custom:hover { background: rgba(176, 38, 255, 0.1); border-color: var(--neon-purple); }
 
-.btn-pix.custom:hover {
-    background: var(--neon-purple);
-    color: var(--text-main);
-    box-shadow: 0 0 15px var(--neon-purple-glow);
-}
-
-/* =========================================
-   LISTAS E AVISOS
-   ========================================= */
+/* Avisos e Listas */
 .warning-box {
     background: rgba(255, 42, 42, 0.1);
     border-left: 3px solid var(--alert-red);
     color: var(--alert-red);
     padding: 0.8rem;
     margin-bottom: 1rem;
-    font-weight: 700;
-    text-shadow: 0 0 5px var(--alert-red-glow);
 }
 
 .tier-item {
@@ -300,49 +231,30 @@ h2, h3 {
     justify-content: space-between;
     padding: 0.8rem 0;
     border-bottom: 1px dashed var(--panel-border);
-    font-size: 0.9rem;
 }
 
 .tier-name { color: var(--neon-purple); font-weight: 700; }
 .tier-desc { color: var(--text-muted); }
 
-.tier-status {
-    margin-top: 1rem;
-    padding-top: 1rem;
-    border-top: 1px solid var(--panel-border);
-    font-weight: 700;
-}
+.tier-status { margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--panel-border); color: var(--text-muted); }
 
-.status-null { color: var(--alert-red); animation: pulse 2s infinite; }
+.highlight-list { list-style: none; }
+.highlight-list li { padding: 0.5rem 0; color: var(--text-muted); }
+.highlight-list li::before { content: '> '; color: var(--neon-green); }
 
-.highlight-list {
-    list-style: none;
-}
-
-.highlight-list li {
-    padding: 0.5rem 0;
-    color: var(--text-muted);
-}
-
-/* =========================================
-   MODAL
-   ========================================= */
+/* Modal */
 .modal {
-    display: none;
     position: fixed;
     top: 0; left: 0; width: 100vw; height: 100vh;
     background: rgba(0, 0, 0, 0.85);
     backdrop-filter: blur(5px);
     z-index: 2000;
+    display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.modal-content {
-    width: 90%;
-    max-width: 450px;
-    margin: 0 auto;
-}
+.modal-content { width: 90%; max-width: 450px; }
 
 .modal-header {
     display: flex;
@@ -350,85 +262,24 @@ h2, h3 {
     align-items: center;
     margin-bottom: 1.5rem;
     border-bottom: 1px solid var(--panel-border);
-    padding-bottom: 0.5rem;
 }
 
-.close-btn {
-    background: transparent;
-    border: none;
-    color: var(--alert-red);
-    cursor: pointer;
-    font-family: 'JetBrains Mono';
-    font-size: 1.2rem;
-}
+.close-btn { background: transparent; border: none; color: var(--alert-red); cursor: pointer; font-family: 'JetBrains Mono'; font-size: 1.2rem; }
 
-.close-btn:hover { text-shadow: 0 0 10px var(--alert-red-glow); }
+.qr-box { background: #fff; padding: 1rem; width: max-content; margin: 0 auto 1.5rem auto; border: 2px solid var(--neon-purple); }
 
-.qr-box {
-    background: #fff;
-    padding: 1rem;
-    width: max-content;
-    margin: 0 auto 1.5rem auto;
-    border: 2px solid var(--neon-purple);
-    box-shadow: 0 0 15px var(--neon-purple-glow);
-}
-
-.input-group {
-    display: flex;
-    flex-direction: column;
-    text-align: left;
-    margin-bottom: 1.5rem;
-}
-
-.input-group label {
-    font-size: 0.8rem;
-    color: var(--text-muted);
-    margin-bottom: 0.5rem;
-}
-
-.cyber-input {
-    background: rgba(0,0,0,0.5);
-    border: 1px solid var(--panel-border);
-    color: var(--neon-green);
-    padding: 0.8rem;
-    font-family: 'JetBrains Mono';
-    width: 100%;
-    outline: none;
-}
-
-.cyber-input:focus { border-color: var(--neon-purple); box-shadow: 0 0 10px var(--neon-purple-glow); }
+.input-group { display: flex; flex-direction: column; margin-bottom: 1.5rem; }
+.input-group label { color: var(--text-muted); margin-bottom: 0.5rem; font-size: 0.8rem; }
+.cyber-input { background: rgba(0,0,0,0.5); border: 1px solid var(--panel-border); color: var(--neon-green); padding: 0.8rem; font-family: 'JetBrains Mono'; width: 100%; outline: none; }
 
 .confirm-btn {
-    width: 100%;
-    background: rgba(176, 38, 255, 0.1);
-    border-color: var(--neon-purple);
-    color: var(--neon-purple);
-    padding: 1rem;
-    font-size: 1.1rem;
-    font-weight: 700;
+    width: 100%; background: rgba(176, 38, 255, 0.1); border-color: var(--neon-purple); color: var(--neon-purple); padding: 1rem; font-weight: 700;
 }
+.confirm-btn:hover { background: var(--neon-purple); color: var(--text-main); }
 
-.confirm-btn:hover {
-    background: var(--neon-purple);
-    color: var(--text-main);
-    box-shadow: 0 0 20px var(--neon-purple-glow);
-}
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+@keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
 
-/* =========================================
-   ANIMAÇÕES DE SUPORTE
-   ========================================= */
-@keyframes blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0; }
-}
-
-@keyframes pulse {
-    0% { opacity: 1; }
-    50% { opacity: 0.4; }
-    100% { opacity: 1; }
-}
-
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
     .grid-layout { grid-template-columns: 1fr; }
-    .pix-btns { grid-template-columns: 1fr 1fr; }
 }
