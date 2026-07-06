@@ -1,119 +1,124 @@
 :root {
-    --neon-blue: #00f2ff;
-    --deep-bg: #050508;
-    --glass: rgba(255, 255, 255, 0.05);
+    --brutal-black: #0a0a0a;
+    --brutal-white: #ffffff;
+    --accent: #ff3300;
 }
 
 body {
-    background: var(--deep-bg);
-    color: white;
-    font-family: 'Inter', sans-serif;
+    background-color: var(--brutal-black);
+    color: var(--brutal-white);
+    font-family: 'Courier New', Courier, monospace;
     margin: 0;
     overflow-x: hidden;
 }
 
-/* Atmosfera Animada */
-.glow-orb {
+/* textura de fundo pra nao parecer limpo demais */
+.noise-overlay {
     position: fixed;
-    width: 400px;
-    height: 400px;
-    background: var(--neon-blue);
-    filter: blur(150px);
-    opacity: 0.15;
-    animation: float 10s infinite alternate;
-    z-index: -1;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: url('https://grainy-gradients.vercel.app/noise.svg');
+    opacity: 0.1;
+    pointer-events: none;
+    z-index: 999;
 }
 
-@keyframes float {
-    from { transform: translate(-20%, -20%); }
-    to { transform: translate(20%, 20%); }
+/* aqui a opacidade da imagem fica visivel mas com tom de documento antigo */
+.brand-img {
+    width: 150px;
+    opacity: 0.75;
+    filter: grayscale(0.5) contrast(1.2);
+    transition: 0.3s;
 }
+.brand-img:hover { opacity: 1; }
 
-/* Glassmorphism */
-.glass-effect {
-    background: var(--glass);
-    backdrop-filter: blur(15px);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 20px;
-    padding: 2rem;
-}
-
-/* Header Estilizado */
 header {
     display: flex;
     justify-content: space-between;
-    padding: 2rem 5%;
-    align-items: center;
+    padding: 2rem;
+    border-bottom: 4px solid var(--brutal-white);
 }
 
-.btn-steam {
-    padding: 10px 20px;
-    border: 1px solid var(--neon-blue);
-    color: var(--neon-blue);
-    text-decoration: none;
-    font-weight: 900;
-    transition: 0.3s;
+.main-display {
+    padding: 4rem 2rem;
 }
 
-.btn-steam:hover {
-    background: var(--neon-blue);
-    color: black;
-    box-shadow: 0 0 20px var(--neon-blue);
+.title {
+    font-size: 8rem;
+    line-height: 0.8;
+    margin-bottom: 3rem;
+    letter-spacing: -5px;
 }
 
-/* Barra de Progresso com Brilho */
-.bar-bg {
-    height: 10px;
-    background: #111;
-    border-radius: 10px;
-    margin: 20px 0;
+.progress-container {
+    width: 100%;
+    height: 40px;
+    border: 4px solid var(--brutal-white);
+    padding: 4px;
 }
 
-.bar-fill {
+.progress-bar {
     height: 100%;
-    background: linear-gradient(90deg, #00f2ff, #7000ff);
-    border-radius: 10px;
-    box-shadow: 0 0 15px var(--neon-blue);
-    transition: width 1s ease-in-out;
+    background: var(--accent);
+    width: 0%;
 }
 
-/* Botões PIX com Efeito Hover */
-.pix-btn {
-    background: transparent;
-    border: 1px solid rgba(255,255,255,0.2);
-    color: white;
-    padding: 15px;
-    border-radius: 10px;
+.controls {
+    display: flex;
+    gap: 2rem;
+    padding: 2rem;
+}
+
+.card-donate, .card-tier {
+    border: 4px solid var(--brutal-white);
+    padding: 2rem;
+    flex: 1;
+    background: #111;
+}
+
+.grid-btns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.b-btn {
+    background: var(--brutal-white);
+    color: var(--brutal-black);
+    border: none;
+    padding: 1.5rem;
+    font-weight: bold;
     cursor: pointer;
-    transition: 0.3s;
+    font-size: 1.2rem;
 }
 
-.pix-btn:hover {
-    transform: scale(1.05);
-    background: rgba(255,255,255,0.1);
-    border-color: white;
+.b-btn:hover {
+    background: var(--accent);
+    color: white;
 }
 
-/* Animação do Modal */
 .modal {
     display: none;
     position: fixed;
     top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.8);
-    backdrop-filter: blur(5px);
+    background: rgba(0,0,0,0.9);
 }
 
-.modal-card {
-    position: absolute;
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    background: #111;
+.modal-inner {
+    width: 300px;
+    margin: 10vh auto;
+    border: 4px solid var(--accent);
+    background: var(--brutal-black);
     padding: 2rem;
-    border: 2px solid var(--neon-blue);
-    animation: popIn 0.3s ease;
+    text-align: center;
 }
 
-@keyframes popIn {
-    from { opacity: 0; transform: translate(-50%, -40%) scale(0.9); }
-    to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+.confirm-btn {
+    width: 100%;
+    background: var(--accent);
+    border: none;
+    padding: 1rem;
+    margin-top: 1rem;
+    color: white;
+    cursor: pointer;
 }
