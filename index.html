@@ -11,43 +11,77 @@
     <div class="crt-overlay"></div>
 
     <header>
-        <div class="logo-wrapper">
+        <div class="logo-area">
             <img src="../images/anavoyd.png" alt="Anavoyd" class="brand-img">
         </div>
-        <div class="status-panel">
-            <span id="steamStatus">SYSTEM_OFFLINE</span>
-            <a id="steamBtn" href="#" class="btn-link">AUTH_STEAM</a>
+        <div class="auth-panel">
+            <img id="steamAvatar" src="" alt="Avatar" style="display: none;">
+            <div class="user-data">
+                <span id="steamStatus">SYSTEM_OFFLINE</span>
+                <a id="steamBtn" href="#">AUTH_STEAM</a>
+            </div>
         </div>
     </header>
 
     <main>
-        <section class="hero-data">
-            <h1>CORAÇÃO_AMBISSAL</h1>
-            <div class="progress-block">
-                <div class="meta-txt">META: 50.000,00 BRL</div>
-                <div class="bar-border">
-                    <div id="progress" class="bar-fill"></div>
-                </div>
-                <div class="stats-txt">
+        <section id="arrecadacao" class="progress-section">
+            <div class="meta-data">
+                <h2 id="meta-title">META: R$ 50.000,00</h2>
+                <div class="stats">
+                    <strong>ARRECADADO:</strong> 
                     <span id="currentAmount">R$ 0,00</span>
                     <span id="percentage">0%</span>
                 </div>
             </div>
+            <div class="bar-border">
+                <div id="progress" class="bar-fill"></div>
+            </div>
         </section>
 
-        <section class="action-grid">
-            <div class="panel">
-                <div id="steamWarning" class="warning">!_AUTH_REQUIRED_TO_CONTRIBUTE</div>
-                <div class="pix-btns" id="pixButtonsContainer">
-                    <button class="b-pix" data-amount="20">20</button>
-                    <button class="b-pix" data-amount="50">50</button>
-                    <button class="b-pix" data-amount="100">100</button>
-                    <button id="pixCustomBtn" class="b-pix custom">_OTHER</button>
+        <section class="content-grid">
+            <div class="left-col">
+                <div class="panel">
+                    <h2>CONTRIBUA PARA ANAVOYD</h2>
+                    <div id="steamWarning" class="warning">!_AUTH_REQUIRED_TO_CONTRIBUTE</div>
+                    <p>Ajude a tornar <strong>Anti-Realidade: Coração Ambissal</strong> uma realidade.</p>
+                    
+                    <div class="pix-btns" id="pixButtonsContainer">
+                        <button class="b-pix" data-amount="20">R$20</button>
+                        <button class="b-pix" data-amount="50">R$50</button>
+                        <button class="b-pix" data-amount="100">R$100</button>
+                        <button id="pixCustomBtn" class="b-pix custom">_OTHER</button>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <h2>SOBRE ANAVOYD</h2>
+                    <p>Bem-vindo a <strong>Anti-Realidade: Coração Ambissal</strong>. RPG focado em exploração, narrativa e mistérios.</p>
+                    <p>Cada decisão altera o rumo da história. Sua contribuição garante a qualidade do projeto.</p>
                 </div>
             </div>
 
-            <div class="panel">
-                <div id="currentTier">TIER: _VOID</div>
+            <div class="right-col">
+                <div class="panel">
+                    <h2>BENEFÍCIOS POR TIER</h2>
+                    <div class="tier-list">
+                        <div class="tier bronze">BRONZE (R$20+) - Crédito em nome, Notícias</div>
+                        <div class="tier gold">OURO (R$50+) - Tudo de Bronze + Acesso Beta + Badge</div>
+                        <div class="tier platinum">PLATINA (R$100+) - Tudo de Ouro + Item Exclusivo</div>
+                        <div class="tier diamond">DIAMANTE (R$500+) - Tudo de Platina + Consultoria</div>
+                    </div>
+                    <div id="currentTier" class="tier-status">TIER ATUAL: _NULL</div>
+                </div>
+
+                <div class="panel">
+                    <h2>DESTAQUES DO PROJETO</h2>
+                    <ul class="highlights">
+                        <li>Novas animações</li>
+                        <li>Assets originais</li>
+                        <li>Trilha sonora e efeitos</li>
+                        <li>Infraestrutura online</li>
+                        <li>Divulgação e marketing</li>
+                    </ul>
+                </div>
             </div>
         </section>
     </main>
@@ -56,12 +90,19 @@
         <div class="modal-box">
             <button id="closePixBtn" class="close-x">[CLOSE]</button>
             <div id="qrcode" class="qr-zone"></div>
-            <input type="text" id="pixKeyDisplay" readonly>
+            <div class="pix-key-area">
+                <span id="pixKeyDisplay">daniel2505slucena@gmail.com</span>
+                <button id="copyPixBtn">COPY</button>
+            </div>
             <button id="confirmPixBtn" class="btn-confirm">SEND_PAYMENT</button>
         </div>
     </div>
 
+    <footer>
+        <p>© 2026 AnavoydStudio | SYSTEM_ACTIVE</p>
+    </footer>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    <script src="../js/main.js"></script>
+    <script src="../js/main.js?v=2026"></script>
 </body>
 </html>
