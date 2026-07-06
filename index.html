@@ -2,89 +2,109 @@
 <html lang="pt-BR">
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ANAVOYD // SYSTEM_TERMINAL</title>
     <link rel="stylesheet" href="../css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;700&family=Rajdhani:wght@300;600&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
     <div class="crt-overlay"></div>
+    <div class="vignette"></div>
 
-    <header>
-        <div class="logo-box">
-            <img src="../images/anavoyd.png" alt="Anavoyd" class="brand-img">
-        </div>
-        <div class="auth-box">
-            <span id="steamStatus">SYSTEM_OFFLINE</span>
-            <a id="steamBtn" href="#">AUTH_STEAM</a>
-        </div>
-    </header>
-
-    <main>
-        <section class="hero">
-            <div class="progress-card">
-                <h2 id="meta-title">META_PROJETO: R$ 50.000,00</h2>
-                <div class="bar-container">
-                    <div id="progress" class="bar-fill"></div>
-                </div>
-                <div class="meta-stats">
-                    <span id="currentAmount">R$ 0,00</span>
-                    <span id="percentage">0%</span>
-                </div>
+    <div class="terminal-container">
+        <header class="sys-header">
+            <div class="logo-box">
+                <img src="../images/anavoyd.png" alt="Anavoyd" class="brand-img">
             </div>
-        </section>
+            <div class="auth-box">
+                <span class="status-indicator"></span>
+                <span id="steamStatus" class="sys-text">SYSTEM_OFFLINE</span>
+                <a id="steamBtn" class="cyber-btn auth-btn" href="#">[ AUTH_STEAM ]</a>
+            </div>
+        </header>
 
-        <section class="grid-layout">
-            <div class="col">
-                <div class="card">
-                    <h2>CONTRIBUA_ANAVOYD</h2>
-                    <div id="steamWarning" class="warning">!_AUTH_REQUIRED</div>
-                    <p>Ajude a tornar <strong>Anti-Realidade: Coração Ambissal</strong> uma realidade.</p>
-                    <div class="pix-btns" id="pixButtonsContainer">
-                        <button class="btn-pix" data-amount="20">20</button>
-                        <button class="btn-pix" data-amount="50">50</button>
-                        <button class="btn-pix" data-amount="100">100</button>
-                        <button id="pixCustomBtn" class="btn-pix custom">_OTHER</button>
+        <main>
+            <section class="hero">
+                <div class="progress-card cyber-panel">
+                    <h2 id="meta-title" class="glitch-text" data-text="META_PROJETO: R$ 50.000,00">> META_PROJETO: R$ 50.000,00<span class="cursor">_</span></h2>
+                    
+                    <div class="bar-container">
+                        <div class="bar-track"></div>
+                        <div id="progress" class="bar-fill"></div>
+                        <div class="bar-glow"></div>
+                    </div>
+                    
+                    <div class="meta-stats">
+                        <span id="currentAmount" class="stat-value">R$ 0,00</span>
+                        <span id="percentage" class="stat-value highlight-green">0%</span>
+                    </div>
+                </div>
+            </section>
+
+            <section class="grid-layout">
+                <div class="col">
+                    <div class="card cyber-panel">
+                        <h2 class="panel-title">> CONTRIBUA_ANAVOYD</h2>
+                        <div id="steamWarning" class="warning-box">
+                            <span class="warning-icon">!</span> _AUTH_REQUIRED
+                        </div>
+                        <p class="panel-desc">Ajude a tornar <strong class="highlight-purple">Anti-Realidade: Coração Ambissal</strong> uma realidade.</p>
+                        
+                        <div class="pix-btns" id="pixButtonsContainer">
+                            <button class="btn-pix cyber-btn" data-amount="20">R$ 20</button>
+                            <button class="btn-pix cyber-btn" data-amount="50">R$ 50</button>
+                            <button class="btn-pix cyber-btn" data-amount="100">R$ 100</button>
+                            <button id="pixCustomBtn" class="btn-pix cyber-btn custom">_OTHER</button>
+                        </div>
+                    </div>
+
+                    <div class="card cyber-panel">
+                        <h2 class="panel-title">> SOBRE_PROJETO</h2>
+                        <p class="panel-desc">RPG de exploração, narrativa reativa e mistérios espaciais em um universo fragmentado.</p>
                     </div>
                 </div>
 
-                <div class="card">
-                    <h2>SOBRE_PROJETO</h2>
-                    <p>RPG de exploração, narrativa reativa e mistérios espaciais.</p>
-                </div>
-            </div>
-
-            <div class="col">
-                <div class="card highlight">
-                    <h2>BENEFÍCIOS_TIER</h2>
-                    <div class="tier-list">
-                        <div class="tier-item">BRONZE (20+) // Créditos + Notícias</div>
-                        <div class="tier-item">OURO (50+) // + Beta + Badge</div>
-                        <div class="tier-item">PLATINA (100+) // + Item Exclusivo</div>
-                        <div class="tier-item">DIAMANTE (500+) // + Consultoria</div>
+                <div class="col">
+                    <div class="card cyber-panel highlight-panel">
+                        <h2 class="panel-title">> BENEFÍCIOS_TIER</h2>
+                        <div class="tier-list">
+                            <div class="tier-item"><span class="tier-name">BRONZE (20+)</span> <span class="tier-desc">// Créditos + Notícias</span></div>
+                            <div class="tier-item"><span class="tier-name">OURO (50+)</span> <span class="tier-desc">// + Beta + Badge</span></div>
+                            <div class="tier-item"><span class="tier-name">PLATINA (100+)</span> <span class="tier-desc">// + Item Exclusivo</span></div>
+                            <div class="tier-item"><span class="tier-name">DIAMANTE (500+)</span> <span class="tier-desc">// + Consultoria</span></div>
+                        </div>
+                        <div id="currentTier" class="tier-status">> STATUS: <span class="status-null">NULL</span></div>
                     </div>
-                    <div id="currentTier" class="tier-status">STATUS: NULL</div>
-                </div>
 
-                <div class="card">
-                    <h2>DESTAQUES</h2>
-                    <ul class="highlight-list">
-                        <li>Novas animações</li>
-                        <li>Assets originais</li>
-                        <li>Trilha sonora</li>
-                        <li>Infraestrutura</li>
-                    </ul>
+                    <div class="card cyber-panel">
+                        <h2 class="panel-title">> DESTAQUES_SISTEMA</h2>
+                        <ul class="highlight-list">
+                            <li>[+] Novas animações táticas</li>
+                            <li>[+] Assets visuais originais</li>
+                            <li>[+] Trilha sonora imersiva</li>
+                            <li>[+] Infraestrutura de servidores</li>
+                        </ul>
+                    </div>
                 </div>
-            </div>
-        </section>
-    </main>
+            </section>
+        </main>
+    </div>
 
     <div id="pixModal" class="modal">
-        <div class="modal-content">
-            <button id="closePixBtn" class="close-btn">[FECHAR]</button>
+        <div class="modal-content cyber-panel highlight-panel">
+            <div class="modal-header">
+                <h3>> UPLINK_PAGAMENTO</h3>
+                <button id="closePixBtn" class="close-btn">[X]</button>
+            </div>
             <div id="qrcode" class="qr-box"></div>
-            <input type="text" id="pixKeyDisplay" readonly>
-            <button id="confirmPixBtn" class="confirm-btn">CONFIRMAR_PAGAMENTO</button>
+            <div class="input-group">
+                <label for="pixKeyDisplay">CHAVE_PIX_CÓPIA_COLA:</label>
+                <input type="text" id="pixKeyDisplay" class="cyber-input" readonly>
+            </div>
+            <button id="confirmPixBtn" class="cyber-btn confirm-btn">> CONFIRMAR_PAGAMENTO</button>
         </div>
     </div>
 
