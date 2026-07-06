@@ -1,7 +1,6 @@
 // ==========================================
-// --- CONFIGURAÇÃO DINÂMICA DA API ---
+// --- CONFIGURAÇÃO DINÂMICA DA API ---
 // ==========================================
-// Se estiver rodando localmente (localhost), usa a porta 3000. Caso contrário, assume a URL do site atual.
 const URL_API = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
     ? 'http://localhost:3000'
     : window.location.origin;
@@ -23,19 +22,22 @@ let estado = {
 // ==========================================
 // --- PERSISTÊNCIA REAL DE DADOS ---
 // ==========================================
-function carregarMetaGlobalReal() {
-    let salvoGlobal = localStorage.getItem('meta_global_arrecadada');
+async function carregarDadosEProgresso() {
     let salvoUsuario = localStorage.getItem('usuario_total_doado');
+    estado.totalDoadoPeloUsuario = salvoUsuario ? parseFloat(salvoUsuario) : 0.00;
 
-    if (!salvoGlobal || parseFloat(salvoGlobal) > 1000) {
-        localStorage.setItem('meta_global_arrecadada', '0');
-        localStorage.setItem('usuario_total_doado', '0');
-        salvoGlobal = '0';
-        salvoUsuario = '0';
+    try {
+        const resposta = await fetch(`${URL_API}/api/meta-progresso`);
+        const dados = await resposta.json();
+        estado.arrecadadoAtual = parseFloat(dados.arrecadadoAtual || 0);
+    } catch (e) {
+        console.error("Erro ao buscar progresso do servidor, usando backup local:", e);
+        let backupGlobal = localStorage.getItem('meta_global_arrecadada');
+        estado.arrecadadoAtual = backupGlobal ? parseFloat(backupGlobal) : 0.00;
     }
-
-    estado.arrecadadoAtual = parseFloat(salvoGlobal);
-    estado.totalDoadoPeloUsuario = parseFloat(salvoUsuario);
+    
+    atualizarProgressoGeral();
+    atualizarTierUsuario();
 }
 
 // ==========================================
@@ -91,6 +93,7 @@ function atualizarTierUsuario() {
     let tierAtualNome = "Nenhum (Contribua para desbloquear)";
     let corTier = "var(--primary)";
     el.tierCards.forEach(card => card.classList.remove('active-tier'));
+    
     const tiersOrdenados = Array.from(el.tierCards).sort((a, b) => b.dataset.min - a.dataset.min);
     for (const card of tiersOrdenados) {
         const minNecessario = parseFloat(card.dataset.min);
@@ -120,7 +123,6 @@ function inicializarLoginSteam() {
 
 async function buscarDadosPerfilSteam(steamId) {
     try {
-        // Agora fazemos a chamada direta no back-end para fugir do bloqueio do proxy público
         const urlAlvo = `${URL_API}/api/steam-perfil/${steamId}`;
         const resposta = await fetch(urlAlvo);
         const textoXml = await resposta.text();
@@ -130,14 +132,16 @@ async function buscarDadosPerfilSteam(steamId) {
         const nome = xmlDoc.getElementsByTagName("steamID")[0]?.textContent;
         const foto = xmlDoc.getElementsByTagName("avatarIcon")[0]?.textContent;
         
-        if (nome && foto) return { personaname: nome, avatar: foto, steamid: steamId };
+        if (nome && foto) {
+            return { personaname: nome, avatar: foto, steamid: steamId };
+        }
     } catch (erro) { 
         console.error("Erro ao buscar dados do perfil da Steam pelo servidor:", erro); 
     }
     return null;
 }
 
-async function efetuarLoginInterface(steamId) {
+async function efectuarLoginInterface(steamId) {
     estado.logadoSteam = true;
     estado.steamId = steamId;
     if (el.steamBtn) {
@@ -150,6 +154,7 @@ async function efetuarLoginInterface(steamId) {
     }
     el.pixButtons.forEach(btn => btn.removeAttribute('disabled'));
     if (el.steamWarning) el.steamWarning.style.display = "none";
+    
     let dadosPerfil = JSON.parse(localStorage.getItem('steam_user_dados'));
     if (!dadosPerfil || dadosPerfil.steamid !== steamId) {
         dadosPerfil = await buscarDadosPerfilSteam(steamId);
@@ -209,10 +214,8 @@ async function abrirModalPix(valor) {
                 };
             }
         } else {
-            console.error("Erro do servidor:", data);
-            alert("Erro ao gerar Pix. Verifique o console.");
+            alert("Erro ao gerar Pix.");
         }
-
     } catch (error) {
         console.error("Erro na comunicação:", error);
     }
@@ -242,11 +245,10 @@ if (el.pixCustomBtn) {
         if (!inputUsuario) return;
         
         const valorLimpo = parseFloat(inputUsuario.replace(',', '.'));
-        
         if (!isNaN(valorLimpo) && valorLimpo >= 0.01) {
             abrirModalPix(valorLimpo);
         } else {
-            alert("Valor inválido. Digite apenas números (ex: 1,00)");
+            alert("Valor inválido.");
         }
     });
 }
@@ -261,17 +263,20 @@ if (el.confirmPixBtn) {
         try {
             const resposta = await fetch(`${URL_API}/api/verificar-pagamento/${estado.idTransacaoAtual}`);
             const resultado = await resposta.json();
+            
             if (resultado.pago === true) {
-                estado.arrecadadoAtual += estado.valorSelecionadoPix;
+                estado.arrecadadoAtual = resultado.arrecadadoAtual;
                 estado.totalDoadoPeloUsuario += estado.valorSelecionadoPix;
+                
                 localStorage.setItem('meta_global_arrecadada', estado.arrecadadoAtual.toString());
                 localStorage.setItem('usuario_total_doado', estado.totalDoadoPeloUsuario.toString());
+                
                 atualizarProgressoGeral();
                 atualizarTierUsuario();
                 fecharModalPix();
-                alert("✅ Pagamento confirmado!");
+                alert("✅ Pagamento confirmado e salvo com sucesso!");
             } else {
-                alert("❌ Ainda não identificado.");
+                alert("❌ Pagamento ainda não identificado no Mercado Pago.");
             }
         } catch (e) { 
             alert("Erro ao conectar no servidor."); 
@@ -281,10 +286,8 @@ if (el.confirmPixBtn) {
     });
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    carregarMetaGlobalReal();
+document.addEventListener('DOMContentLoaded', async () => {
+    await carregarDadosEProgresso();
     inicializarLoginSteam();
     verificarSessaoExistente();
-    atualizarProgressoGeral();
-    atualizarTierUsuario();
 });
