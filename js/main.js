@@ -153,13 +153,13 @@ function inicializarLoginSteam() {
 // ==================================================================================
 // LÓGICA DE PIX E MODAL (COM TRATAMENTO DE ERROS E LIMPEZA)
 // ==================================================================================
+// --- VERSÃO CORRIGIDA DA FUNÇÃO DE PIX ---
 async function abrirModalPix(valor) {
     if (!estado.logadoSteam) {
-        alert("AUTH_REQUIRED: Faça login na Steam para doar.");
+        alert("Faça login na Steam primeiro.");
         return;
     }
 
-    estado.valorSelecionadoPix = parseFloat(valor);
     el.pixModal?.classList.remove('hidden');
     el.qrcodeContainer.innerHTML = "GERANDO QR CODE...";
 
@@ -171,26 +171,36 @@ async function abrirModalPix(valor) {
         });
         const data = await response.json();
 
+        console.log("Resposta do servidor:", data); // DEBUG
+
         if (data.pixCopiaECola) {
-            // LIMPEZA DA STRING PIX (TRIM) - Essencial para evitar erros de leitura no banco
             const codigoLimpo = data.pixCopiaECola.trim();
-            
             estado.idTransacaoAtual = data.idTransacao;
+            
             el.qrcodeContainer.innerHTML = "";
             
-            // Gerador de QRCode com alta precisão
-            new QRCode(el.qrcodeContainer, { 
+            // VERIFICAÇÃO DE SEGURANÇA:
+            // Se o QRCode não aparecer, é porque o window.QRCode não está definido
+            if (typeof window.QRCode === 'undefined') {
+                console.error("ERRO: A biblioteca QRCode não foi carregada no escopo global.");
+                el.qrcodeContainer.innerHTML = "ERRO: Biblioteca QR não encontrada.";
+                return;
+            }
+
+            new window.QRCode(el.qrcodeContainer, { 
                 text: codigoLimpo, 
                 width: 200, 
                 height: 200,
-                correctLevel: QRCode.CorrectLevel.Q 
+                correctLevel: window.QRCode.CorrectLevel.Q 
             });
             
             el.pixKeyDisplay.value = codigoLimpo;
+        } else {
+            el.qrcodeContainer.innerHTML = "Erro: Dados do Pix vazios.";
         }
     } catch (e) { 
-        alert("ERRO_SERVIDOR: Não foi possível gerar o código Pix.");
-        console.error("Erro na geração Pix:", e);
+        console.error("Erro na requisição Pix:", e);
+        el.qrcodeContainer.innerHTML = "Erro de conexão.";
     }
 }
 
