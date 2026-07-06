@@ -1,4 +1,12 @@
 // ==========================================
+// --- CONFIGURAÇÃO DINÂMICA DA API ---
+// ==========================================
+// Se estiver rodando localmente (localhost), usa a porta 3000. Caso contrário, assume a URL do site atual.
+const URL_API = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? 'http://localhost:3000'
+    : window.location.origin;
+
+// ==========================================
 // --- ESTADO GLOBAL DA APLICAÇÃO ---
 // ==========================================
 let estado = {
@@ -112,16 +120,20 @@ function inicializarLoginSteam() {
 
 async function buscarDadosPerfilSteam(steamId) {
     try {
-        const proxyUrl = "https://corsproxy.io/?";
-        const urlAlvo = `https://steamcommunity.com/profiles/${steamId}/?xml=1`;
-        const resposta = await fetch(proxyUrl + encodeURIComponent(urlAlvo));
+        // Agora fazemos a chamada direta no back-end para fugir do bloqueio do proxy público
+        const urlAlvo = `${URL_API}/api/steam-perfil/${steamId}`;
+        const resposta = await fetch(urlAlvo);
         const textoXml = await resposta.text();
+        
         const parser = new DOMParser();
         const xmlDoc = parser.parseFromString(textoXml, "text/xml");
         const nome = xmlDoc.getElementsByTagName("steamID")[0]?.textContent;
         const foto = xmlDoc.getElementsByTagName("avatarIcon")[0]?.textContent;
+        
         if (nome && foto) return { personaname: nome, avatar: foto, steamid: steamId };
-    } catch (erro) { console.error(erro); }
+    } catch (erro) { 
+        console.error("Erro ao buscar dados do perfil da Steam pelo servidor:", erro); 
+    }
     return null;
 }
 
@@ -161,39 +173,41 @@ function verificarSessaoExistente() {
 // ==========================================
 // --- LÓGICA DO MODAL PIX ---
 // ==========================================
-// main.js - Substitua a lógica dentro da função abrirModalPix
 async function abrirModalPix(valor) {
-    // 1. Atualiza o valor no campo de texto do modal (formata para aparecer com vírgula)
+    estado.valorSelecionadoPix = parseFloat(valor);
     const inputPix = document.getElementById('pixAmount');
-    inputPix.value = `R$ ${parseFloat(valor).toFixed(2).replace('.', ',')}`;
+    if (inputPix) inputPix.value = `R$ ${parseFloat(valor).toFixed(2).replace('.', ',')}`;
 
-    // Mostra o modal
-    el.pixModal.style.display = "flex";
-    
-    // Mostra o carregando
-    document.getElementById('qrcode').innerHTML = "Gerando QR Code...";
+    if (el.pixModal) el.pixModal.style.display = "flex";
+    if (el.qrcodeContainer) el.qrcodeContainer.innerHTML = "Gerando QR Code...";
 
     try {
-        // 2. AQUI ESTÁ O PULO DO GATO:
-        // Certifique-se de que o corpo (body) do fetch usa a variável 'valor'
-        // e NÃO um número fixo como 50.
-        const response = await fetch('http://localhost:3000/api/gerar-pix',{
+        const response = await fetch(`${URL_API}/api/gerar-pix`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ valor: valor }) // <--- ESTA LINHA DEVE USAR A VARIÁVEL 'valor'
+            body: JSON.stringify({ valor: valor })
         });
 
         const data = await response.json();
 
         if (data.pixQrCodeBase64) {
-            // Gera o QR Code com o dado que veio do servidor
-            document.getElementById('qrcode').innerHTML = ""; // limpa o "Gerando..."
+            estado.idTransacaoAtual = data.idTransacao;
+            if (el.qrcodeContainer) el.qrcodeContainer.innerHTML = ""; 
+            
             new QRCode(document.getElementById("qrcode"), {
                 text: data.pixCopiaECola,
                 width: 180,
                 height: 180
             });
-            document.getElementById('pixKeyDisplay').innerText = "Chave gerada com sucesso!";
+            
+            if (el.pixKeyDisplay) el.pixKeyDisplay.innerText = "Chave gerada com sucesso!";
+            
+            if (el.copyPixBtn) {
+                el.copyPixBtn.onclick = () => {
+                    navigator.clipboard.writeText(data.pixCopiaECola);
+                    alert("Copia e Cola copiado!");
+                };
+            }
         } else {
             console.error("Erro do servidor:", data);
             alert("Erro ao gerar Pix. Verifique o console.");
@@ -227,10 +241,8 @@ if (el.pixCustomBtn) {
         const inputUsuario = prompt("Digite o valor da doação (Ex: 1,00):", "1,00");
         if (!inputUsuario) return;
         
-        // Corrige vírgula e garante que é número
         const valorLimpo = parseFloat(inputUsuario.replace(',', '.'));
         
-        // Validação: Garante que é um número e que é pelo menos 0.01
         if (!isNaN(valorLimpo) && valorLimpo >= 0.01) {
             abrirModalPix(valorLimpo);
         } else {
@@ -241,28 +253,33 @@ if (el.pixCustomBtn) {
 
 if (el.closePixBtn) el.closePixBtn.addEventListener('click', fecharModalPix);
 
-el.confirmPixBtn.addEventListener('click', async () => {
-    estado.verificandoPix = true;
-    el.confirmPixBtn.textContent = "Validando...";
-    try {
-        const resposta = await fetch(`http://localhost:3000/api/verificar-pagamento/${estado.idTransacaoAtual}`);
-        const resultado = await resposta.json();
-        if (resultado.pago === true) {
-            estado.arrecadadoAtual = resultado.novoTotalGlobal;
-            estado.totalDoadoPeloUsuario += estado.valorSelecionadoPix;
-            localStorage.setItem('meta_global_arrecadada', estado.arrecadadoAtual.toString());
-            localStorage.setItem('usuario_total_doado', estado.totalDoadoPeloUsuario.toString());
-            atualizarProgressoGeral();
-            atualizarTierUsuario();
-            fecharModalPix();
-            alert("✅ Pagamento confirmado!");
-        } else {
-            alert("❌ Ainda não identificado.");
+if (el.confirmPixBtn) {
+    el.confirmPixBtn.addEventListener('click', async () => {
+        if (!estado.idTransacaoAtual) return;
+        estado.verificandoPix = true;
+        el.confirmPixBtn.textContent = "Validando...";
+        try {
+            const resposta = await fetch(`${URL_API}/api/verificar-pagamento/${estado.idTransacaoAtual}`);
+            const resultado = await resposta.json();
+            if (resultado.pago === true) {
+                estado.arrecadadoAtual += estado.valorSelecionadoPix;
+                estado.totalDoadoPeloUsuario += estado.valorSelecionadoPix;
+                localStorage.setItem('meta_global_arrecadada', estado.arrecadadoAtual.toString());
+                localStorage.setItem('usuario_total_doado', estado.totalDoadoPeloUsuario.toString());
+                atualizarProgressoGeral();
+                atualizarTierUsuario();
+                fecharModalPix();
+                alert("✅ Pagamento confirmado!");
+            } else {
+                alert("❌ Ainda não identificado.");
+            }
+        } catch (e) { 
+            alert("Erro ao conectar no servidor."); 
         }
-    } catch (e) { alert("Erro ao conectar no servidor."); }
-    estado.verificandoPix = false;
-    el.confirmPixBtn.textContent = "Já paguei";
-});
+        estado.verificandoPix = false;
+        el.confirmPixBtn.textContent = "Já paguei";
+    });
+}
 
 document.addEventListener('DOMContentLoaded', () => {
     carregarMetaGlobalReal();
