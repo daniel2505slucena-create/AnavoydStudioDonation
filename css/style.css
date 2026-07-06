@@ -1,255 +1,416 @@
 /* ==========================================================================
-   --- VETORES DE DESIGN: PRETO, ROXO & BRANCO ---
+   VARIÁVEIS GLOBAIS E TEMA
    ========================================================================== */
 :root {
-    --bg-dark: #000000;           /* Preto absoluto */
-    --bg-surface: #0a0a0c;        /* Superfície cinza-escura sutil */
-    --primary-purple: #8b5cf6;    /* Roxo Elétrico Vivo */
-    --purple-glow: rgba(139, 92, 246, 0.25);
-    --text-white: #ffffff;        /* Branco puro */
-    --text-dim: #7c7c8a;          /* Texto secundário fosco */
-    --border-line: #18181c;       /* Divisores milimétricos */
+    --bg-dark: #0a0b0e;
+    --card-bg: rgba(18, 20, 28, 0.75);
+    --card-border: rgba(255, 42, 109, 0.15);
+    --primary: #ff2a6d;       /* Vermelho/Rosa Neon (Coração) */
+    --primary-glow: rgba(255, 42, 109, 0.4);
+    --secondary: #05d9e8;     /* Ciano Elétrico */
+    --text-main: #f5f6f9;
+    --text-muted: rgba(245, 246, 249, 0.6);
+    
+    /* Cores dos Tiers */
     --bronze: #cd7f32;
-    --bronze-glow: rgba(205, 127, 50, 0.25);
-    
-    --gold: #ffc72c;          /* Ouro vibrante */
-    --gold-glow: rgba(255, 199, 44, 0.3);
-    
-    --platinum: #e5e4e2;      /* Platina metálico claro */
-    --platinum-glow: rgba(229, 228, 226, 0.3);
-    
-    --diamond: #00f0ff;       /* Ciano Ciberpunk / Diamante */
-    --diamond-glow: rgba(0, 240, 255, 0.35);
-}
-
-/* --- RESET & COMPORTAMENTO GLOBAL --- */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    background-color: var(--bg-dark);
-    color: var(--text-white);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    overflow-x: hidden;
-}
-
-/* Títulos Premium em Caixa Alta */
-h2, h3, .btn-steam, .pix-btn, .tier-badge, .modal-header h2 {
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
+    --gold: #ffd700;
+    --platinum: #e5e4e2;
+    --diamond: #8ae5ff;
 }
 
 /* ==========================================================================
-   --- HEADER CINEMATOGRÁFICO ---
+   ESTRUTURA BASE E IMAGEM DE FUNDO (OPACIDADE BAIXA)
+   ========================================================================== */
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* Ajustado para subir uma pasta e entrar em images usando barras padrões da web */
+    background-image: url('../images/antirealidadecoraçãoambissal.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0.12; /* Imagem bem sutil para não atrapalhar o texto */
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* ==========================================================================
+   HEADER / CABEÇALHO (GLASSMORPHISM)
    ========================================================================== */
 header {
-    background-color: #000000;
-    border-bottom: 1px solid var(--border-line);
+    background: rgba(10, 11, 14, 0.8);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     position: sticky;
     top: 0;
     z-index: 100;
-    height: 80px;
-    display: flex;
-    align-items: center;
+    padding: 12px 24px;
 }
 
 .header-top {
-    width: 100%;
-    max-width: 1600px;
-    margin: 0 auto;
-    padding: 0 2rem;
-    display: grid;
-    grid-template-columns: 1fr auto 1fr;
+    display: flex;
+    justify-content: space-between;
     align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
-/* Menu Hambúrguer lateral */
+.brand-logo {
+    height: 45px;
+    object-fit: contain;
+}
+
+/* Menu Hambúrguer */
 .menu-toggle {
     background: none;
     border: none;
     cursor: pointer;
     display: flex;
     flex-direction: column;
-    gap: 5px;
-    width: 22px;
+    gap: 6px;
 }
 
 .menu-toggle span {
     display: block;
-    width: 100%;
+    width: 26px;
     height: 2px;
-    background-color: var(--text-white);
+    background-color: var(--text-main);
+    border-radius: 2px;
+    transition: 0.3s;
 }
 
-/* Tratamento da Logo */
-.logo-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.brand-logo {
-    height: 38px;
-    width: auto;
-    object-fit: contain;
-    transition: transform 0.2s ease;
-}
-
-.brand-logo:hover {
-    transform: scale(1.03);
-}
-
-/* Área do Usuário (Steam) */
+/* Painel de Login Steam */
 .auth-buttons {
-    justify-self: end;
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 12px;
+    background: rgba(255, 255, 255, 0.03);
+    padding: 6px 14px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 #steamAvatar {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    border: 2px solid var(--primary-purple);
-    object-fit: cover;
-}
-
-/* Evita que a imagem vazia apareça quebrada como na captura anterior */
-#steamAvatar[src=""], #steamAvatar:not([src]) {
-    display: none !important;
+    width: 32px;
+    height: 32px;
+    border-radius: 4px;
+    border: 1px solid var(--secondary);
 }
 
 .user-info {
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
+    align-items: flex-start;
 }
 
 .steam-status {
     font-size: 0.75rem;
-    font-weight: 700;
-    color: var(--text-white);
+    color: var(--text-muted);
 }
 
 .btn-steam {
-    font-size: 0.65rem;
-    color: var(--primary-purple);
+    color: var(--secondary);
     text-decoration: none;
-    transition: filter 0.2s;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: color 0.2s;
 }
 
 .btn-steam:hover {
-    filter: brightness(1.3);
+    color: var(--text-main);
 }
 
 /* ==========================================================================
-   --- CONTEÚDO E SEÇÕES ---
-   ========================================================================== */
-main {
-    max-width: 1200px;
-    margin: 4rem auto;
-    padding: 0 2rem;
-    display: flex;
-    flex-direction: column;
-    gap: 4rem;
-}
-
-section {
-    background-color: var(--bg-surface);
-    border: 1px solid var(--border-line);
-    padding: 3rem;
-    border-radius: 4px;
-}
-
-section h2 {
-    font-size: 1.15rem;
-    border-left: 3px solid var(--primary-purple);
-    padding-left: 14px;
-    margin-bottom: 2rem;
-}
-
-section p {
-    color: var(--text-dim);
-    font-size: 1.05rem;
-    line-height: 1.6;
-}
-
-/* Alerta de autenticação */
-.steam-warning {
-    background-color: rgba(139, 92, 246, 0.03);
-    border: 1px solid rgba(139, 92, 246, 0.15);
-    padding: 1.5rem;
-    border-radius: 4px;
-    margin-bottom: 2rem;
-}
-
-/* ==========================================================================
-   --- HUD DE METAS (PROGRESSO) ---
+   BARRA DE ARRECADAÇÃO (META DO JOGO)
    ========================================================================== */
 #arrecadacao {
-    max-width: 1200px;
-    margin: 3rem auto 0 auto;
-    width: calc(100% - 4rem);
-    background-color: var(--bg-surface);
-    border: 1px solid var(--border-line);
-    padding: 2.5rem;
-    border-radius: 4px;
+    max-width: 800px;
+    margin: 40px auto 20px auto;
+    padding: 0 20px;
+}
+
+.meta-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 12px;
+}
+
+#meta-title {
+    font-size: 1.4rem;
+    margin: 0;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+.stats {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+}
+
+#currentAmount {
+    color: var(--text-main);
+    font-weight: 600;
+}
+
+.badge-percentage {
+    background: var(--primary);
+    color: #fff;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    margin-left: 6px;
+    box-shadow: 0 0 10px var(--primary-glow);
 }
 
 .progress-bar {
-    background-color: #000000;
-    height: 4px; /* Linha sutil de progresso high-tech */
-    margin-top: 1.5rem;
+    width: 100%;
+    height: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 6px;
     overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.03);
 }
 
 #progress {
-    background-color: var(--primary-purple);
-    box-shadow: 0 0 10px var(--primary-purple);
+    width: 0%; /* Controlado pelo seu JS */
     height: 100%;
-    width: 0%;
-    transition: width 1s ease-out;
+    background: linear-gradient(90deg, var(--primary), #ff758c);
+    box-shadow: 0 0 12px var(--primary);
+    border-radius: 6px;
+    transition: width 0.5s ease-out;
 }
 
 /* ==========================================================================
-   --- BOTÕES PIX ---
+   CONTEÚDO PRINCIPAL (PAINÉIS CARD)
    ========================================================================== */
+main {
+    max-width: 840px;
+    margin: 0 auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.panel-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    padding: 30px;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+h2 {
+    font-size: 1.5rem;
+    color: var(--text-main);
+    margin-top: 0;
+    margin-bottom: 16px;
+    border-left: 4px solid var(--primary);
+    padding-left: 12px;
+}
+
+p {
+    line-height: 1.6;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+}
+
+.project-desc {
+    font-size: 1.05rem;
+}
+
+/* Alerta Steam Deslogado */
+.steam-warning {
+    background: rgba(255, 152, 0, 0.1);
+    border-left: 4px solid #ff9800;
+    padding: 16px;
+    border-radius: 8px;
+    margin-bottom: 24px;
+}
+
+.warning-title {
+    color: #ff9800 !important;
+    font-weight: 600;
+    margin: 0 0 4px 0 !important;
+}
+
+.warning-desc {
+    margin: 0 !important;
+    font-size: 0.9rem;
+    color: rgba(255, 152, 0, 0.8);
+}
+
+/* Botões de PIX */
 .pix-buttons {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem;
-    margin-top: 2rem;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+    margin-top: 24px;
 }
 
 .pix-btn {
-    background-color: transparent;
-    color: var(--text-white);
-    border: 1px solid #222226;
-    padding: 1.2rem;
-    font-size: 0.8rem;
-    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-main);
+    padding: 14px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1rem;
     cursor: pointer;
     transition: all 0.2s ease;
 }
 
 .pix-btn:hover:not(:disabled) {
-    background-color: var(--primary-purple);
-    border-color: var(--primary-purple);
+    background: var(--primary);
+    border-color: var(--primary);
+    box-shadow: 0 0 15px var(--primary-glow);
+    transform: translateY(-2px);
+}
+
+.pix-btn.custom {
+    border-color: rgba(5, 217, 232, 0.3);
+    color: var(--secondary);
+}
+
+.pix-btn.custom:hover:not(:disabled) {
+    background: var(--secondary);
+    border-color: var(--secondary);
+    color: #000;
+    box-shadow: 0 0 15px rgba(5, 217, 232, 0.4);
 }
 
 .pix-btn:disabled {
-    opacity: 0.15;
+    opacity: 0.25;
     cursor: not-allowed;
+    border-color: rgba(255, 255, 255, 0.05);
 }
 
 /* ==========================================================================
-   --- MODAL PIX (CORREÇÃO CRÍTICA DO BUG DA IMAGEM) ---
+   GRID DE BENEFÍCIOS (TIERS)
+   ========================================================================== */
+.section-subtitle {
+    margin-bottom: 24px;
+}
+
+.benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+}
+
+.benefit-tier {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: transform 0.2s;
+}
+
+.benefit-tier:hover {
+    transform: scale(1.03);
+}
+
+.tier-badge {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* Cores customizadas dos Tiers */
+.benefit-tier.bronze { border-color: rgba(205, 127, 50, 0.3); }
+.benefit-tier.bronze .tier-badge { background: var(--bronze); color: #000; }
+
+.benefit-tier.gold { border-color: rgba(255, 215, 0, 0.3); }
+.benefit-tier.gold .tier-badge { background: var(--gold); color: #000; box-shadow: 0 0 10px rgba(255, 215, 0, 0.2); }
+
+.benefit-tier.platinum { border-color: rgba(229, 228, 226, 0.3); }
+.benefit-tier.platinum .tier-badge { background: var(--platinum); color: #000; }
+
+.benefit-tier.diamond { border-color: rgba(138, 229, 255, 0.3); }
+.benefit-tier.diamond .tier-badge { background: var(--diamond); color: #000; box-shadow: 0 0 10px rgba(138, 229, 255, 0.3); }
+
+.tier-amount {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+}
+
+.tier-benefits {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    text-align: left;
+    width: 100%;
+}
+
+.tier-benefits li {
+    margin-bottom: 8px;
+    line-height: 1.4;
+}
+
+.current-tier {
+    margin-top: 24px;
+    text-align: center;
+    font-size: 0.95rem;
+    color: var(--text-muted);
+}
+
+.tier-none {
+    color: var(--primary);
+    font-weight: 600;
+}
+
+/* Lista de Destaques */
+.highlights-list {
+    padding-left: 20px;
+    color: var(--text-muted);
+}
+
+.highlights-list li {
+    margin-bottom: 10px;
+    line-height: 1.5;
+}
+
+.link-more {
+    color: var(--secondary);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.link-more:hover {
+    text-decoration: underline;
+}
+
+/* ==========================================================================
+   MODAL DE PIX (DESIGN POLIDO)
    ========================================================================== */
 .modal {
     display: none; /* Controlado via JS */
@@ -258,214 +419,166 @@ section p {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.85); /* Fundo escuro atrás */
-    backdrop-filter: blur(8px);
-    z-index: 10000; /* Força ficar à frente de tudo */
-    justify-content: center;
+    background: rgba(5, 5, 8, 0.85);
+    backdrop-filter: blur(6px);
+    z-index: 1000;
     align-items: center;
-    padding: 1.5rem;
+    justify-content: center;
 }
 
 .modal-content {
-    background-color: var(--bg-surface);
-    border: 1px solid var(--border-line);
-    border-radius: 8px;
-    width: 100%;
-    max-width: 460px;
-    overflow: hidden;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+    background: #13151b;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    width: 90%;
+    max-width: 440px;
+    padding: 24px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.6);
 }
 
 .modal-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1.5rem;
-    border-bottom: 1px solid var(--border-line);
+    margin-bottom: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding-bottom: 12px;
 }
 
 .modal-header h2 {
-    font-size: 1rem;
+    font-size: 1.3rem;
+    margin: 0;
+    border: none;
+    padding: 0;
 }
 
 .close-btn {
     background: none;
     border: none;
-    color: var(--text-dim);
-    font-size: 1.5rem;
+    color: var(--text-muted);
+    font-size: 1.8rem;
     cursor: pointer;
+    line-height: 1;
 }
 
 .close-btn:hover {
-    color: var(--text-white);
+    color: var(--primary);
 }
 
-.pix-content {
-    padding: 1.5rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
+.pix-amount {
+    margin-bottom: 20px;
 }
 
 .pix-amount label, .pix-key-section label {
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    color: var(--text-dim);
     display: block;
-    margin-bottom: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 6px;
 }
 
-#pixAmount {
+.pix-amount input {
     width: 100%;
-    background-color: #000;
-    border: 1px solid var(--border-line);
-    padding: 1rem;
-    color: var(--primary-purple);
-    font-size: 1.4rem;
-    font-weight: 700;
-    border-radius: 4px;
-    text-align: center;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 12px;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 1.1rem;
+    font-weight: 600;
+    box-sizing: border-box;
 }
 
 .pix-qrcode-container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: #ffffff; /* Fundo branco para leitura perfeita */
-    padding: 1.5rem;
-    border-radius: 6px;
-    width: 200px;
-    margin: 0 auto;
+    background: #fff; /* QR Code precisa de fundo claro para leitura do celular */
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 20px;
 }
 
-.pix-qrcode-container p {
-    color: #000;
-    font-size: 0.75rem;
-    font-weight: 700;
-    margin-top: 8px;
-    text-transform: uppercase;
+.qrcode-scan-text {
+    font-size: 0.85rem;
+    color: #121212; /* Ajustado para preto ja que o fundo do QR code é branco */
+    margin: 12px 0 0 0;
+    font-weight: 500;
 }
 
 .pix-key-display {
     display: flex;
-    background-color: #000;
-    border: 1px solid var(--border-line);
-    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 4px 4px 12px;
+    margin-bottom: 20px;
 }
 
 #pixKeyDisplay {
-    padding: 1rem;
     font-size: 0.85rem;
-    color: var(--text-white);
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    flex-grow: 1;
+    word-break: break-all;
+    padding-right: 8px;
 }
 
 .btn-copy {
-    background-color: var(--primary-purple);
-    color: white;
+    background: var(--secondary);
     border: none;
-    padding: 0 1.5rem;
-    font-weight: 700;
+    color: #000;
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-weight: 600;
     cursor: pointer;
-    text-transform: uppercase;
-    font-size: 0.75rem;
+    font-size: 0.85rem;
+}
+
+.pix-instructions {
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 8px;
+    padding: 14px;
+    margin-bottom: 20px;
 }
 
 .pix-instructions h3 {
-    font-size: 0.8rem;
-    margin-bottom: 0.5rem;
+    margin-top: 0;
+    font-size: 0.9rem;
+    margin-bottom: 8px;
 }
 
 .pix-instructions ol {
-    padding-left: 1.2rem;
-    font-size: 0.9rem;
-    color: var(--text-dim);
+    margin: 0;
+    padding-left: 18px;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.pix-instructions li {
+    margin-bottom: 6px;
 }
 
 .btn-confirm-pix {
-    background-color: var(--text-white);
-    color: #000;
+    width: 100%;
+    background: var(--primary);
+    color: #fff;
     border: none;
-    padding: 1.2rem;
-    font-weight: 800;
-    font-size: 0.85rem;
-    border-radius: 4px;
+    padding: 14px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1rem;
     cursor: pointer;
-    text-transform: uppercase;
-    transition: background-color 0.2s;
-}
-
-.btn-confirm-pix:hover {
-    background-color: var(--primary-purple);
-    color: white;
+    box-shadow: 0 4px 15px var(--primary-glow);
 }
 
 /* ==========================================================================
-   --- TIERS DE RECOMPENSA (COM CORES DINÂMICAS) ---
+   RODAPÉ (FOOTER)
    ========================================================================== */
-.benefits-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 1.5rem;
-}
-
-.benefit-tier {
-    background-color: #020204;
-    border: 1px solid var(--border-line);
-    padding: 2.5rem 2rem;
-    border-radius: 4px;
-    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    opacity: 0.55; /* Cards inativos ficam um pouco mais apagados */
-}
-
-/* Quando o tier está ativo (desbloqueado pelo usuário) */
-.benefit-tier.active-tier {
-    opacity: 1;
-    transform: translateY(-4px); /* Leve elevação elegante */
-}
-
-/* --- Cores e Brilhos Específicos por Nível --- */
-/* Bronze (Padrão para cards sem classe especial) */
-.benefit-tier.active-tier { border-color: var(--bronze); box-shadow: 0 0 20px var(--bronze-glow); }
-.benefit-tier .tier-badge { color: var(--bronze); }
-
-/* Ouro */
-.benefit-tier:has(.tier-badge.gold).active-tier { border-color: var(--gold); box-shadow: 0 0 25px var(--gold-glow); }
-.benefit-tier .tier-badge.gold { color: var(--gold); }
-
-/* Platina */
-.benefit-tier:has(.tier-badge.platinum).active-tier { border-color: var(--platinum); box-shadow: 0 0 25px var(--platinum-glow); }
-.benefit-tier .tier-badge.platinum { color: var(--platinum); }
-
-/* Diamante */
-.benefit-tier:has(.tier-badge.diamond).active-tier { border-color: var(--diamond); box-shadow: 0 0 30px var(--diamond-glow); }
-.benefit-tier .tier-badge.diamond { color: var(--diamond); }
-
-.tier-badge {
-    font-size: 0.75rem;
-    font-weight: 800;
-    margin-bottom: 0.5rem;
-    text-shadow: 0 0 8px currentColor; /* Dá um brilho neon suave no texto */
-}
-
-.tier-amount {
-    font-size: 1.8rem;
-    font-weight: 800;
-    color: var(--text-white);
-}
-
-.tier-benefits {
-    margin-top: 1.5rem;
-    border-top: 1px solid var(--border-line);
-    padding-top: 1rem;
-    list-style: none;
-}
-
-.tier-benefits li {
-    font-size: 0.9rem;
-    color: var(--text-dim);
-    margin-bottom: 0.5rem;
+footer {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.03);
+    margin-top: 60px;
 }
