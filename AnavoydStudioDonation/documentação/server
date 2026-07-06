@@ -1,0 +1,10 @@
+PASSO A PASSO PARA LIGAR O SEU SERVIDOR:
+
+1. Abra o VS Code.
+2. Abra o terminal (menu Terminal > New Terminal).
+3. Certifique-se de que está na pasta 'js':
+   Digite: cd js
+4. Ligue o servidor:
+   Digite: node server.js
+   (O terminal deve mostrar: 🚀 Servidor de PIX rodando em http://localhost:3000)
+5. MANTENHA O TERMINAL ABERTO. Se fechar, o site não gera Pix.

@@ -1,0 +1,471 @@
+/* ==========================================================================
+   --- VETORES DE DESIGN: PRETO, ROXO & BRANCO ---
+   ========================================================================== */
+:root {
+    --bg-dark: #000000;           /* Preto absoluto */
+    --bg-surface: #0a0a0c;        /* Superfície cinza-escura sutil */
+    --primary-purple: #8b5cf6;    /* Roxo Elétrico Vivo */
+    --purple-glow: rgba(139, 92, 246, 0.25);
+    --text-white: #ffffff;        /* Branco puro */
+    --text-dim: #7c7c8a;          /* Texto secundário fosco */
+    --border-line: #18181c;       /* Divisores milimétricos */
+    --bronze: #cd7f32;
+    --bronze-glow: rgba(205, 127, 50, 0.25);
+    
+    --gold: #ffc72c;          /* Ouro vibrante */
+    --gold-glow: rgba(255, 199, 44, 0.3);
+    
+    --platinum: #e5e4e2;      /* Platina metálico claro */
+    --platinum-glow: rgba(229, 228, 226, 0.3);
+    
+    --diamond: #00f0ff;       /* Ciano Ciberpunk / Diamante */
+    --diamond-glow: rgba(0, 240, 255, 0.35);
+}
+
+/* --- RESET & COMPORTAMENTO GLOBAL --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-white);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+}
+
+/* Títulos Premium em Caixa Alta */
+h2, h3, .btn-steam, .pix-btn, .tier-badge, .modal-header h2 {
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+}
+
+/* ==========================================================================
+   --- HEADER CINEMATOGRÁFICO ---
+   ========================================================================== */
+header {
+    background-color: #000000;
+    border-bottom: 1px solid var(--border-line);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    height: 80px;
+    display: flex;
+    align-items: center;
+}
+
+.header-top {
+    width: 100%;
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+}
+
+/* Menu Hambúrguer lateral */
+.menu-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    width: 22px;
+}
+
+.menu-toggle span {
+    display: block;
+    width: 100%;
+    height: 2px;
+    background-color: var(--text-white);
+}
+
+/* Tratamento da Logo */
+.logo-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.brand-logo {
+    height: 38px;
+    width: auto;
+    object-fit: contain;
+    transition: transform 0.2s ease;
+}
+
+.brand-logo:hover {
+    transform: scale(1.03);
+}
+
+/* Área do Usuário (Steam) */
+.auth-buttons {
+    justify-self: end;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+#steamAvatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 2px solid var(--primary-purple);
+    object-fit: cover;
+}
+
+/* Evita que a imagem vazia apareça quebrada como na captura anterior */
+#steamAvatar[src=""], #steamAvatar:not([src]) {
+    display: none !important;
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.steam-status {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--text-white);
+}
+
+.btn-steam {
+    font-size: 0.65rem;
+    color: var(--primary-purple);
+    text-decoration: none;
+    transition: filter 0.2s;
+}
+
+.btn-steam:hover {
+    filter: brightness(1.3);
+}
+
+/* ==========================================================================
+   --- CONTEÚDO E SEÇÕES ---
+   ========================================================================== */
+main {
+    max-width: 1200px;
+    margin: 4rem auto;
+    padding: 0 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
+}
+
+section {
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-line);
+    padding: 3rem;
+    border-radius: 4px;
+}
+
+section h2 {
+    font-size: 1.15rem;
+    border-left: 3px solid var(--primary-purple);
+    padding-left: 14px;
+    margin-bottom: 2rem;
+}
+
+section p {
+    color: var(--text-dim);
+    font-size: 1.05rem;
+    line-height: 1.6;
+}
+
+/* Alerta de autenticação */
+.steam-warning {
+    background-color: rgba(139, 92, 246, 0.03);
+    border: 1px solid rgba(139, 92, 246, 0.15);
+    padding: 1.5rem;
+    border-radius: 4px;
+    margin-bottom: 2rem;
+}
+
+/* ==========================================================================
+   --- HUD DE METAS (PROGRESSO) ---
+   ========================================================================== */
+#arrecadacao {
+    max-width: 1200px;
+    margin: 3rem auto 0 auto;
+    width: calc(100% - 4rem);
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-line);
+    padding: 2.5rem;
+    border-radius: 4px;
+}
+
+.progress-bar {
+    background-color: #000000;
+    height: 4px; /* Linha sutil de progresso high-tech */
+    margin-top: 1.5rem;
+    overflow: hidden;
+}
+
+#progress {
+    background-color: var(--primary-purple);
+    box-shadow: 0 0 10px var(--primary-purple);
+    height: 100%;
+    width: 0%;
+    transition: width 1s ease-out;
+}
+
+/* ==========================================================================
+   --- BOTÕES PIX ---
+   ========================================================================== */
+.pix-buttons {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.pix-btn {
+    background-color: transparent;
+    color: var(--text-white);
+    border: 1px solid #222226;
+    padding: 1.2rem;
+    font-size: 0.8rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.pix-btn:hover:not(:disabled) {
+    background-color: var(--primary-purple);
+    border-color: var(--primary-purple);
+}
+
+.pix-btn:disabled {
+    opacity: 0.15;
+    cursor: not-allowed;
+}
+
+/* ==========================================================================
+   --- MODAL PIX (CORREÇÃO CRÍTICA DO BUG DA IMAGEM) ---
+   ========================================================================== */
+.modal {
+    display: none; /* Controlado via JS */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.85); /* Fundo escuro atrás */
+    backdrop-filter: blur(8px);
+    z-index: 10000; /* Força ficar à frente de tudo */
+    justify-content: center;
+    align-items: center;
+    padding: 1.5rem;
+}
+
+.modal-content {
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-line);
+    border-radius: 8px;
+    width: 100%;
+    max-width: 460px;
+    overflow: hidden;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--border-line);
+}
+
+.modal-header h2 {
+    font-size: 1rem;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    color: var(--text-dim);
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.close-btn:hover {
+    color: var(--text-white);
+}
+
+.pix-content {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.pix-amount label, .pix-key-section label {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+#pixAmount {
+    width: 100%;
+    background-color: #000;
+    border: 1px solid var(--border-line);
+    padding: 1rem;
+    color: var(--primary-purple);
+    font-size: 1.4rem;
+    font-weight: 700;
+    border-radius: 4px;
+    text-align: center;
+}
+
+.pix-qrcode-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #ffffff; /* Fundo branco para leitura perfeita */
+    padding: 1.5rem;
+    border-radius: 6px;
+    width: 200px;
+    margin: 0 auto;
+}
+
+.pix-qrcode-container p {
+    color: #000;
+    font-size: 0.75rem;
+    font-weight: 700;
+    margin-top: 8px;
+    text-transform: uppercase;
+}
+
+.pix-key-display {
+    display: flex;
+    background-color: #000;
+    border: 1px solid var(--border-line);
+    border-radius: 4px;
+}
+
+#pixKeyDisplay {
+    padding: 1rem;
+    font-size: 0.85rem;
+    color: var(--text-white);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex-grow: 1;
+}
+
+.btn-copy {
+    background-color: var(--primary-purple);
+    color: white;
+    border: none;
+    padding: 0 1.5rem;
+    font-weight: 700;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+}
+
+.pix-instructions h3 {
+    font-size: 0.8rem;
+    margin-bottom: 0.5rem;
+}
+
+.pix-instructions ol {
+    padding-left: 1.2rem;
+    font-size: 0.9rem;
+    color: var(--text-dim);
+}
+
+.btn-confirm-pix {
+    background-color: var(--text-white);
+    color: #000;
+    border: none;
+    padding: 1.2rem;
+    font-weight: 800;
+    font-size: 0.85rem;
+    border-radius: 4px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: background-color 0.2s;
+}
+
+.btn-confirm-pix:hover {
+    background-color: var(--primary-purple);
+    color: white;
+}
+
+/* ==========================================================================
+   --- TIERS DE RECOMPENSA (COM CORES DINÂMICAS) ---
+   ========================================================================== */
+.benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+}
+
+.benefit-tier {
+    background-color: #020204;
+    border: 1px solid var(--border-line);
+    padding: 2.5rem 2rem;
+    border-radius: 4px;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    opacity: 0.55; /* Cards inativos ficam um pouco mais apagados */
+}
+
+/* Quando o tier está ativo (desbloqueado pelo usuário) */
+.benefit-tier.active-tier {
+    opacity: 1;
+    transform: translateY(-4px); /* Leve elevação elegante */
+}
+
+/* --- Cores e Brilhos Específicos por Nível --- */
+/* Bronze (Padrão para cards sem classe especial) */
+.benefit-tier.active-tier { border-color: var(--bronze); box-shadow: 0 0 20px var(--bronze-glow); }
+.benefit-tier .tier-badge { color: var(--bronze); }
+
+/* Ouro */
+.benefit-tier:has(.tier-badge.gold).active-tier { border-color: var(--gold); box-shadow: 0 0 25px var(--gold-glow); }
+.benefit-tier .tier-badge.gold { color: var(--gold); }
+
+/* Platina */
+.benefit-tier:has(.tier-badge.platinum).active-tier { border-color: var(--platinum); box-shadow: 0 0 25px var(--platinum-glow); }
+.benefit-tier .tier-badge.platinum { color: var(--platinum); }
+
+/* Diamante */
+.benefit-tier:has(.tier-badge.diamond).active-tier { border-color: var(--diamond); box-shadow: 0 0 30px var(--diamond-glow); }
+.benefit-tier .tier-badge.diamond { color: var(--diamond); }
+
+.tier-badge {
+    font-size: 0.75rem;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+    text-shadow: 0 0 8px currentColor; /* Dá um brilho neon suave no texto */
+}
+
+.tier-amount {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: var(--text-white);
+}
+
+.tier-benefits {
+    margin-top: 1.5rem;
+    border-top: 1px solid var(--border-line);
+    padding-top: 1rem;
+    list-style: none;
+}
+
+.tier-benefits li {
+    font-size: 0.9rem;
+    color: var(--text-dim);
+    margin-bottom: 0.5rem;
+}
