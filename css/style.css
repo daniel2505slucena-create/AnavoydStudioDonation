@@ -53,9 +53,9 @@ body {
     100% { background-position: 0 100vh; }
 }
 
-/* Layout preenchendo mais a tela */
+/* Layout Responsivo Principal */
 .terminal-container {
-    width: 95%; /* Ajustado para preencher a tela */
+    width: 95%;
     max-width: 1600px;
     margin: 0 auto;
     padding: 2rem 0;
@@ -71,6 +71,7 @@ body {
     margin-bottom: 2rem;
     border-bottom: 1px solid var(--panel-border);
     position: relative;
+    gap: 1.5rem;
 }
 
 .sys-header::after {
@@ -84,6 +85,7 @@ body {
 
 .brand-img {
     width: 180px;
+    max-width: 100%;
     filter: drop-shadow(0 0 5px var(--neon-purple-glow));
 }
 
@@ -94,12 +96,14 @@ body {
     background: rgba(0,0,0,0.5);
     padding: 0.5rem 1rem;
     border: 1px solid var(--panel-border);
+    white-space: nowrap;
 }
 
 .status-indicator {
     width: 8px;
     height: 8px;
     border-radius: 50%;
+    flex-shrink: 0;
 }
 .status-indicator.offline { background-color: var(--alert-red); box-shadow: 0 0 8px var(--alert-red); animation: pulse 2s infinite; }
 .status-indicator.online { background-color: var(--neon-green); box-shadow: 0 0 8px var(--neon-green); }
@@ -231,10 +235,11 @@ h2, h3 {
     justify-content: space-between;
     padding: 0.8rem 0;
     border-bottom: 1px dashed var(--panel-border);
+    gap: 1rem;
 }
 
-.tier-name { color: var(--neon-purple); font-weight: 700; }
-.tier-desc { color: var(--text-muted); }
+.tier-name { color: var(--neon-purple); font-weight: 700; white-space: nowrap; }
+.tier-desc { color: var(--text-muted); text-align: right; }
 
 .tier-status { margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--panel-border); color: var(--text-muted); }
 
@@ -267,6 +272,7 @@ h2, h3 {
 .close-btn { background: transparent; border: none; color: var(--alert-red); cursor: pointer; font-family: 'JetBrains Mono'; font-size: 1.2rem; }
 
 .qr-box { background: #fff; padding: 1rem; width: max-content; margin: 0 auto 1.5rem auto; border: 2px solid var(--neon-purple); }
+.qr-box canvas, .qr-box img { display: block; margin: 0 auto; }
 
 .input-group { display: flex; flex-direction: column; margin-bottom: 1.5rem; }
 .input-group label { color: var(--text-muted); margin-bottom: 0.5rem; font-size: 0.8rem; }
@@ -280,6 +286,57 @@ h2, h3 {
 @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
 
+/* ==========================================
+   --- REGRAS DE RESPONSIVIDADE (MEDIA QUERIES) ---
+   ========================================== */
+
+/* Tablets e Telas Médias */
 @media (max-width: 1024px) {
-    .grid-layout { grid-template-columns: 1fr; }
+    .grid-layout {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    .card { margin-bottom: 1rem; }
+}
+
+/* Celulares e Telas Pequenas */
+@media (max-width: 640px) {
+    body { font-size: 13px; }
+    
+    .terminal-container {
+        width: 92%;
+        padding: 1rem 0;
+    }
+
+    .sys-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .auth-box {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .progress-card { padding: 1rem; }
+    
+    .meta-stats { font-size: 1rem; }
+
+    .pix-btns {
+        grid-template-columns: repeat(2, 1fr); /* Vira duas colunas no celular para não espremer o texto */
+    }
+
+    .tier-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.2rem;
+        padding: 0.5rem 0;
+    }
+
+    .tier-desc { text-align: left; }
+    
+    .modal-content {
+        padding: 1rem;
+    }
 }
