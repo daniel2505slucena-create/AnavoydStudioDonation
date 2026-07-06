@@ -117,7 +117,7 @@ function inicializarLoginSteam() {
     if (urlParams.has('openid.identity')) {
         const identityUrl = urlParams.get('openid.identity');
         const steamIdReal = identityUrl.split('/').pop();
-        efetuarLoginInterface(steamIdReal);
+        efetuarLoginInterface(steamIdReal); // <--- Chamada corrigida
     }
 }
 
@@ -141,7 +141,8 @@ async function buscarDadosPerfilSteam(steamId) {
     return null;
 }
 
-async function efectuarLoginInterface(steamId) {
+// <--- Nome da função corrigido para efetuarLoginInterface
+async function efetuarLoginInterface(steamId) {
     estado.logadoSteam = true;
     estado.steamId = steamId;
     if (el.steamBtn) {
@@ -171,7 +172,7 @@ async function efectuarLoginInterface(steamId) {
 function verificarSessaoExistente() {
     const usuarioSalvo = localStorage.getItem('steam_user');
     if (usuarioSalvo && !window.location.search.includes('openid.identity')) {
-        efetuarLoginInterface(usuarioSalvo);
+        efetuarLoginInterface(usuarioSalvo); // <--- Chamada corrigida
     }
 }
 
