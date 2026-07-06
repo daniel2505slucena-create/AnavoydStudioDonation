@@ -1,18 +1,21 @@
-// ==========================================
+// ==================================================================================
 // --- IMPORTAÇÕES FIREBASE ---
-// ==========================================
-import { doc, onSnapshot } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+// ==================================================================================
+import { 
+    doc, 
+    onSnapshot 
+} from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
 
-// ==========================================
-// --- CONFIGURAÇÃO DA API ---
-// ==========================================
+// ==================================================================================
+// --- CONFIGURAÇÃO E VARIÁVEIS DE AMBIENTE ---
+// ==================================================================================
 const URL_API = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
     ? 'http://localhost:3000'
     : 'https://anavoydstudiodonatebackend.onrender.com';
 
-// ==========================================
-// --- ESTADO GLOBAL ---
-// ==========================================
+// ==================================================================================
+// --- ESTADO GLOBAL DA APLICAÇÃO ---
+// ==================================================================================
 let estado = {
     logadoSteam: false,
     steamId: null,
@@ -24,9 +27,9 @@ let estado = {
     idTransacaoAtual: null
 };
 
-// ==========================================
+// ==================================================================================
 // --- CONFIGURAÇÃO OPENID STEAM ---
-// ==========================================
+// ==================================================================================
 const URL_DO_SEU_SITE = window.location.origin + window.location.pathname;
 const STEAM_OPENID_URL = "https://steamcommunity.com/openid/login" +
     `?openid.ns=http://specs.openid.net/auth/2.0` +
@@ -36,16 +39,16 @@ const STEAM_OPENID_URL = "https://steamcommunity.com/openid/login" +
     `&openid.identity=http://specs.openid.net/auth/2.0/identifier_select` +
     `&openid.claimed_id=http://specs.openid.net/auth/2.0/identifier_select`;
 
-// ==========================================
-// --- MAPEAMENTO DO DOM ---
-// ==========================================
+// ==================================================================================
+// --- MAPEAMENTO DOS ELEMENTOS DO DOM ---
+// ==================================================================================
 const el = {
     steamBtn: document.getElementById('steamBtn'),
     steamStatus: document.getElementById('steamStatus'),
     statusIndicator: document.getElementById('statusIndicator'),
     steamWarning: document.getElementById('steamWarning'),
     pixContainer: document.getElementById('pixButtonsContainer'),
-    pixButtons: document.querySelectorAll('.btn-pix'),
+    pixButtons: document.querySelectorAll('.btn-pix'), 
     pixCustomBtn: document.getElementById('pixCustomBtn'),
     pixModal: document.getElementById('pixModal'),
     closePixBtn: document.getElementById('closePixBtn'),
@@ -58,62 +61,47 @@ const el = {
     currentTier: document.getElementById('currentTier')
 };
 
-const formatarMoeda = (valor) => valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+// ==================================================================================
+// --- FUNÇÕES UTILITÁRIAS ---
+// ==================================================================================
+function formatarMoeda(valor) {
+    return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+}
 
-// ==========================================
-// --- FUNÇÕES DE ATUALIZAÇÃO VISUAL ---
-// ==========================================
+// ==================================================================================
+// --- FUNÇÕES DE ATUALIZAÇÃO DE INTERFACE ---
+// ==================================================================================
 function atualizarProgressoGeral() {
     const porcentagem = Math.min((estado.arrecadadoAtual / estado.metaTotal) * 100, 100);
-    if (el.currentAmount) el.currentAmount.textContent = formatarMoeda(estado.arrecadadoAtual);
-    if (el.percentage) el.percentage.textContent = `${porcentagem.toFixed(2)}%`;
-    if (el.progressBar) el.progressBar.style.width = `${porcentagem}%`;
+    
+    if(el.currentAmount) el.currentAmount.textContent = formatarMoeda(estado.arrecadadoAtual);
+    if(el.percentage) el.percentage.textContent = `${porcentagem.toFixed(2)}%`;
+    if(el.progressBar) el.progressBar.style.width = `${porcentagem}%`;
 }
 
 function atualizarTierUsuario() {
-    let tier = "NENHUM";
-    let cor = "#ff4d4d";
+    let tierAtualNome = "NENHUM";
+    let corTier = "#ff4d4d";
     
-    if (estado.totalDoadoPeloUsuario >= 500) { tier = "DIAMANTE"; cor = "#00f2ff"; }
-    else if (estado.totalDoadoPeloUsuario >= 100) { tier = "PLATINA"; cor = "#a000ff"; }
-    else if (estado.totalDoadoPeloUsuario >= 50) { tier = "OURO"; cor = "#ffd700"; }
-    else if (estado.totalDoadoPeloUsuario >= 20) { tier = "BRONZE"; cor = "#cd7f32"; }
+    if (estado.totalDoadoPeloUsuario >= 500) { tierAtualNome = "DIAMANTE"; corTier = "#00f2ff"; }
+    else if (estado.totalDoadoPeloUsuario >= 100) { tierAtualNome = "PLATINA"; corTier = "#a000ff"; }
+    else if (estado.totalDoadoPeloUsuario >= 50) { tierAtualNome = "OURO"; corTier = "#ffd700"; }
+    else if (estado.totalDoadoPeloUsuario >= 20) { tierAtualNome = "BRONZE"; corTier = "#cd7f32"; }
 
-    if (el.currentTier) {
-        el.currentTier.innerHTML = `SEU TIER ATUAL: <span style="color:${cor}; font-weight:700;">${tier}</span> (TOTAL DOADO: ${formatarMoeda(estado.totalDoadoPeloUsuario)})`;
+    if(el.currentTier) {
+        el.currentTier.innerHTML = `SEU TIER ATUAL: <span style="color:${corTier}; font-weight:700;">${tierAtualNome}</span> (TOTAL DOADO: ${formatarMoeda(estado.totalDoadoPeloUsuario)})`;
     }
 }
 
-// ==========================================
-// --- LÓGICA STEAM ---
-// ==========================================
-function inicializarLoginSteam() {
-    if (el.steamBtn) {
-        el.steamBtn.addEventListener('click', (e) => {
-            if (!estado.logadoSteam) {
-                e.preventDefault();
-                window.location.href = STEAM_OPENID_URL;
-            } else {
-                localStorage.removeItem('steam_user');
-                window.location.reload();
-            }
-        });
-    }
-
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.has('openid.identity')) {
-        const steamId = urlParams.get('openid.identity').split('/').pop();
-        efetuarLoginInterface(steamId);
-        window.history.replaceState({}, document.title, window.location.pathname);
-    }
-}
-
-async function efetuarLoginInterface(steamId) {
+// ==================================================================================
+// --- LÓGICA DE LOGIN STEAM ---
+// ==================================================================================
+function efetuarLoginInterface(steamId) {
     estado.logadoSteam = true;
     estado.steamId = steamId;
     localStorage.setItem('steam_user', steamId);
 
-    // Snapshot do Firestore para o usuário
+    // Listener do Firestore para dados do usuário
     if (window.db) {
         const userRef = doc(window.db, "users", steamId);
         onSnapshot(userRef, (docSnap) => {
@@ -134,15 +122,38 @@ async function efetuarLoginInterface(steamId) {
     if (el.steamStatus) el.steamStatus.textContent = "USER_AUTENTICADO";
 }
 
-// ==========================================
-// --- LÓGICA PIX ---
-// ==========================================
+function inicializarLoginSteam() {
+    el.steamBtn?.addEventListener('click', (e) => {
+        if (!estado.logadoSteam) {
+            e.preventDefault();
+            window.location.href = STEAM_OPENID_URL;
+        } else {
+            localStorage.removeItem('steam_user');
+            window.location.reload();
+        }
+    });
+    
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('openid.identity')) {
+        const identityUrl = urlParams.get('openid.identity');
+        const steamIdReal = identityUrl.split('/').pop();
+        efetuarLoginInterface(steamIdReal);
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
+}
+
+// ==================================================================================
+// --- LÓGICA DE PIX E MODAL ---
+// ==================================================================================
 async function abrirModalPix(valor) {
-    if (!estado.logadoSteam) return alert("AUTH_REQUIRED: Faça login na Steam.");
+    if (!estado.logadoSteam) {
+        alert("AUTH_REQUIRED: Faça login na Steam para doar.");
+        return;
+    }
 
     estado.valorSelecionadoPix = parseFloat(valor);
-    if (el.pixModal) el.pixModal.classList.remove('hidden');
-    if (el.qrcodeContainer) el.qrcodeContainer.innerHTML = "GERANDO...";
+    el.pixModal?.classList.remove('hidden');
+    el.qrcodeContainer.innerHTML = "GERANDO...";
 
     try {
         const response = await fetch(`${URL_API}/api/gerar-pix`, {
@@ -152,90 +163,102 @@ async function abrirModalPix(valor) {
         });
         const data = await response.json();
 
-        if (data.pixQrCodeBase64) {
+        if (data.pixCopiaECola) {
+            // LIMPEZA DA STRING PIX (TRIM)
+            const codigoLimpo = data.pixCopiaECola.trim();
+            
             estado.idTransacaoAtual = data.idTransacao;
-            if (el.qrcodeContainer) el.qrcodeContainer.innerHTML = "";
-            new QRCode(el.qrcodeContainer, { text: data.pixCopiaECola, width: 180, height: 180 });
-            if (el.pixKeyDisplay) el.pixKeyDisplay.value = data.pixCopiaECola;
+            el.qrcodeContainer.innerHTML = "";
+            
+            // Gerador de QRCode
+            new QRCode(el.qrcodeContainer, { 
+                text: codigoLimpo, 
+                width: 200, 
+                height: 200,
+                correctLevel: QRCode.CorrectLevel.Q 
+            });
+            
+            el.pixKeyDisplay.value = codigoLimpo;
         }
-    } catch (e) {
-        alert("ERRO_SERVIDOR");
-        if (el.pixModal) el.pixModal.classList.add('hidden');
+    } catch (e) { 
+        alert("ERRO_SERVIDOR: Tente novamente.");
+        console.error(e);
     }
 }
 
 function fecharModalPix() {
     if (el.pixModal) el.pixModal.classList.add('hidden');
-    estado.verificandoPix = false;
     estado.idTransacaoAtual = null;
 }
 
-// ==========================================
-// --- EVENT LISTENERS ---
-// ==========================================
+// ==================================================================================
+// --- EVENT LISTENERS DOS BOTÕES ---
+// ==================================================================================
+
 // Botões fixos 20, 50, 100
 el.pixButtons.forEach(btn => {
     btn.addEventListener('click', (e) => {
-        if (e.target.id !== 'pixCustomBtn') {
-            abrirModalPix(e.target.getAttribute('data-amount'));
+        const targetBtn = e.currentTarget;
+        if (targetBtn.id !== 'pixCustomBtn') {
+            const valor = targetBtn.getAttribute('data-amount');
+            if (valor) abrirModalPix(valor);
         }
     });
 });
 
 // Botão Custom
-if (el.pixCustomBtn) {
-    el.pixCustomBtn.addEventListener('click', () => {
-        const val = prompt("Digite o valor:", "25,00");
-        if (val) abrirModalPix(parseFloat(val.replace(',', '.')));
-    });
-}
-
-// Botão Fechar Modal
-if (el.closePixBtn) el.closePixBtn.addEventListener('click', fecharModalPix);
+el.pixCustomBtn?.addEventListener('click', () => {
+    const val = prompt("Digite o valor da doação:", "25,00");
+    if (val) abrirModalPix(parseFloat(val.replace(',', '.')));
+});
 
 // Botão Confirmar Pagamento
-if (el.confirmPixBtn) {
-    el.confirmPixBtn.addEventListener('click', async () => {
-        if (!estado.idTransacaoAtual) return;
-        el.confirmPixBtn.textContent = "VERIFICANDO...";
+el.confirmPixBtn?.addEventListener('click', async () => {
+    if (!estado.idTransacaoAtual) return;
+    
+    el.confirmPixBtn.textContent = "VERIFICANDO...";
+    
+    try {
+        const resposta = await fetch(`${URL_API}/api/verificar-pagamento`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                id: estado.idTransacaoAtual, 
+                steamId: estado.steamId 
+            })
+        });
         
-        try {
-            const resposta = await fetch(`${URL_API}/api/verificar-pagamento`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ id: estado.idTransacaoAtual, steamId: estado.steamId })
-            });
-            const res = await resposta.json();
-            
-            if (res.pago) {
-                alert("SUCESSO: Tier atualizado.");
-                fecharModalPix();
-            } else {
-                alert("Aguardando confirmação...");
-                el.confirmPixBtn.textContent = "> CONFIRMAR_PAGAMENTO";
-            }
-        } catch (e) {
-            alert("Erro na rede.");
+        const resultado = await resposta.json();
+        
+        if (resultado.pago) {
+            alert("SUCESSO: Tier atualizado!");
+            fecharModalPix();
+        } else {
+            alert("Aguardando confirmação bancária...");
             el.confirmPixBtn.textContent = "> CONFIRMAR_PAGAMENTO";
         }
-    });
-}
+    } catch (e) { 
+        alert("Erro na rede. Verifique sua conexão."); 
+        el.confirmPixBtn.textContent = "> CONFIRMAR_PAGAMENTO";
+    }
+});
 
-// Clipboard
-if (el.pixKeyDisplay) {
-    el.pixKeyDisplay.addEventListener('click', () => {
-        navigator.clipboard.writeText(el.pixKeyDisplay.value);
-        alert("COPIADO!");
-    });
-}
+// Fechar Modal
+el.closePixBtn?.addEventListener('click', fecharModalPix);
 
-// ==========================================
-// --- INICIALIZAÇÃO ---
-// ==========================================
+// Copiar Chave
+el.pixKeyDisplay?.addEventListener('click', () => {
+    navigator.clipboard.writeText(el.pixKeyDisplay.value);
+    alert("COPIADO PARA O CLIPBOARD!");
+});
+
+// ==================================================================================
+// --- INICIALIZAÇÃO DA PÁGINA ---
+// ==================================================================================
 document.addEventListener('DOMContentLoaded', () => {
     inicializarLoginSteam();
     
-    // Listener Global Firestore
+    // Listener Global (Meta)
     if (window.db) {
         onSnapshot(doc(window.db, "stats", "global"), (snap) => {
             if (snap.exists()) {
@@ -245,6 +268,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    const user = localStorage.getItem('steam_user');
-    if (user) efetuarLoginInterface(user);
+    // Verificar se usuário já estava logado
+    const usuarioSalvo = localStorage.getItem('steam_user');
+    if (usuarioSalvo) {
+        efetuarLoginInterface(usuarioSalvo);
+    }
 });
