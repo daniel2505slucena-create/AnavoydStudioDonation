@@ -1,20 +1,22 @@
-// ==================================================================================
-// --- IMPORTAÇÕES FIREBASE ---
-// ==================================================================================
+/**
+ * MAIN.JS - SISTEMA DE DOAÇÃO E TIER STEAM
+ * VERSÃO COMPLETA E DETALHADA
+ */
+
 import { 
     doc, 
     onSnapshot 
 } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
 
 // ==================================================================================
-// --- CONFIGURAÇÃO E VARIÁVEIS DE AMBIENTE ---
+// CONFIGURAÇÕES DE AMBIENTE
 // ==================================================================================
 const URL_API = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
     ? 'http://localhost:3000'
     : 'https://anavoydstudiodonatebackend.onrender.com';
 
 // ==================================================================================
-// --- ESTADO GLOBAL DA APLICAÇÃO ---
+// ESTADO GLOBAL DA APLICAÇÃO
 // ==================================================================================
 let estado = {
     logadoSteam: false,
@@ -28,7 +30,7 @@ let estado = {
 };
 
 // ==================================================================================
-// --- CONFIGURAÇÃO OPENID STEAM ---
+// CONFIGURAÇÃO OPENID STEAM
 // ==================================================================================
 const URL_DO_SEU_SITE = window.location.origin + window.location.pathname;
 const STEAM_OPENID_URL = "https://steamcommunity.com/openid/login" +
@@ -40,7 +42,7 @@ const STEAM_OPENID_URL = "https://steamcommunity.com/openid/login" +
     `&openid.claimed_id=http://specs.openid.net/auth/2.0/identifier_select`;
 
 // ==================================================================================
-// --- MAPEAMENTO DOS ELEMENTOS DO DOM ---
+// MAPEAMENTO DOS ELEMENTOS DO DOM
 // ==================================================================================
 const el = {
     steamBtn: document.getElementById('steamBtn'),
@@ -62,16 +64,17 @@ const el = {
 };
 
 // ==================================================================================
-// --- FUNÇÕES UTILITÁRIAS ---
+// FUNÇÕES UTILITÁRIAS DE FORMATAÇÃO
 // ==================================================================================
 function formatarMoeda(valor) {
     return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 }
 
 // ==================================================================================
-// --- FUNÇÕES DE ATUALIZAÇÃO DE INTERFACE ---
+// FUNÇÕES DE ATUALIZAÇÃO DA INTERFACE (UI)
 // ==================================================================================
 function atualizarProgressoGeral() {
+    console.log("Atualizando barra de progresso:", estado.arrecadadoAtual);
     const porcentagem = Math.min((estado.arrecadadoAtual / estado.metaTotal) * 100, 100);
     
     if(el.currentAmount) el.currentAmount.textContent = formatarMoeda(estado.arrecadadoAtual);
@@ -80,6 +83,7 @@ function atualizarProgressoGeral() {
 }
 
 function atualizarTierUsuario() {
+    console.log("Atualizando tier visual. Total doado:", estado.totalDoadoPeloUsuario);
     let tierAtualNome = "NENHUM";
     let corTier = "#ff4d4d";
     
@@ -94,14 +98,15 @@ function atualizarTierUsuario() {
 }
 
 // ==================================================================================
-// --- LÓGICA DE LOGIN STEAM ---
+// LÓGICA DE LOGIN STEAM E AUTENTICAÇÃO
 // ==================================================================================
 function efetuarLoginInterface(steamId) {
+    console.log("Autenticando usuário na interface:", steamId);
     estado.logadoSteam = true;
     estado.steamId = steamId;
     localStorage.setItem('steam_user', steamId);
 
-    // Listener do Firestore para dados do usuário
+    // Listener do Firestore para dados específicos do usuário
     if (window.db) {
         const userRef = doc(window.db, "users", steamId);
         onSnapshot(userRef, (docSnap) => {
@@ -112,6 +117,7 @@ function efetuarLoginInterface(steamId) {
         });
     }
 
+    // Atualiza os elementos visuais
     if (el.steamBtn) el.steamBtn.textContent = "[ LOGOUT ]";
     if (el.steamWarning) el.steamWarning.classList.add('hidden');
     if (el.pixContainer) el.pixContainer.classList.remove('disabled');
@@ -123,6 +129,7 @@ function efetuarLoginInterface(steamId) {
 }
 
 function inicializarLoginSteam() {
+    // Configura o evento do botão de login
     el.steamBtn?.addEventListener('click', (e) => {
         if (!estado.logadoSteam) {
             e.preventDefault();
@@ -133,6 +140,7 @@ function inicializarLoginSteam() {
         }
     });
     
+    // Verifica retorno da Steam
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.has('openid.identity')) {
         const identityUrl = urlParams.get('openid.identity');
@@ -143,7 +151,7 @@ function inicializarLoginSteam() {
 }
 
 // ==================================================================================
-// --- LÓGICA DE PIX E MODAL ---
+// LÓGICA DE PIX E MODAL (COM TRATAMENTO DE ERROS E LIMPEZA)
 // ==================================================================================
 async function abrirModalPix(valor) {
     if (!estado.logadoSteam) {
@@ -153,7 +161,7 @@ async function abrirModalPix(valor) {
 
     estado.valorSelecionadoPix = parseFloat(valor);
     el.pixModal?.classList.remove('hidden');
-    el.qrcodeContainer.innerHTML = "GERANDO...";
+    el.qrcodeContainer.innerHTML = "GERANDO QR CODE...";
 
     try {
         const response = await fetch(`${URL_API}/api/gerar-pix`, {
@@ -164,13 +172,13 @@ async function abrirModalPix(valor) {
         const data = await response.json();
 
         if (data.pixCopiaECola) {
-            // LIMPEZA DA STRING PIX (TRIM)
+            // LIMPEZA DA STRING PIX (TRIM) - Essencial para evitar erros de leitura no banco
             const codigoLimpo = data.pixCopiaECola.trim();
             
             estado.idTransacaoAtual = data.idTransacao;
             el.qrcodeContainer.innerHTML = "";
             
-            // Gerador de QRCode
+            // Gerador de QRCode com alta precisão
             new QRCode(el.qrcodeContainer, { 
                 text: codigoLimpo, 
                 width: 200, 
@@ -181,21 +189,22 @@ async function abrirModalPix(valor) {
             el.pixKeyDisplay.value = codigoLimpo;
         }
     } catch (e) { 
-        alert("ERRO_SERVIDOR: Tente novamente.");
-        console.error(e);
+        alert("ERRO_SERVIDOR: Não foi possível gerar o código Pix.");
+        console.error("Erro na geração Pix:", e);
     }
 }
 
 function fecharModalPix() {
     if (el.pixModal) el.pixModal.classList.add('hidden');
     estado.idTransacaoAtual = null;
+    el.qrcodeContainer.innerHTML = "";
 }
 
 // ==================================================================================
-// --- EVENT LISTENERS DOS BOTÕES ---
+// EVENT LISTENERS E GERENCIAMENTO DE INTERAÇÃO
 // ==================================================================================
 
-// Botões fixos 20, 50, 100
+// Eventos dos botões fixos 20, 50, 100
 el.pixButtons.forEach(btn => {
     btn.addEventListener('click', (e) => {
         const targetBtn = e.currentTarget;
@@ -212,7 +221,7 @@ el.pixCustomBtn?.addEventListener('click', () => {
     if (val) abrirModalPix(parseFloat(val.replace(',', '.')));
 });
 
-// Botão Confirmar Pagamento
+// Botão Confirmar Pagamento (Verificação no servidor)
 el.confirmPixBtn?.addEventListener('click', async () => {
     if (!estado.idTransacaoAtual) return;
     
@@ -231,7 +240,7 @@ el.confirmPixBtn?.addEventListener('click', async () => {
         const resultado = await resposta.json();
         
         if (resultado.pago) {
-            alert("SUCESSO: Tier atualizado!");
+            alert("SUCESSO: Pagamento confirmado e Tier atualizado!");
             fecharModalPix();
         } else {
             alert("Aguardando confirmação bancária...");
@@ -253,12 +262,15 @@ el.pixKeyDisplay?.addEventListener('click', () => {
 });
 
 // ==================================================================================
-// --- INICIALIZAÇÃO DA PÁGINA ---
+// INICIALIZAÇÃO DA PÁGINA (FIREBASE & EVENTOS)
 // ==================================================================================
 document.addEventListener('DOMContentLoaded', () => {
+    console.log("DOM Carregado, iniciando sistema...");
+    
+    // 1. Inicializar Steam
     inicializarLoginSteam();
     
-    // Listener Global (Meta)
+    // 2. Listener Global de Metas (Firestore)
     if (window.db) {
         onSnapshot(doc(window.db, "stats", "global"), (snap) => {
             if (snap.exists()) {
@@ -268,7 +280,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Verificar se usuário já estava logado
+    // 3. Verificar sessão salva
     const usuarioSalvo = localStorage.getItem('steam_user');
     if (usuarioSalvo) {
         efetuarLoginInterface(usuarioSalvo);
