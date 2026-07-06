@@ -25,11 +25,29 @@ body {
     overflow-x: hidden;
 }
 
+/* -----------------------------------------
+   --- CONFIGURAÇÃO DA IMAGEM DE FUNDO ---
+   ----------------------------------------- */
+.bg-back-image {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-image: url('../images/antirealidadecoraçãoambissal.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0.35; /* Opacidade média da imagem */
+    z-index: -1;   /* Fica atrás de tudo */
+    pointer-events: none; /* Não interfere nos cliques */
+}
+
 /* Utilitários JS */
 .hidden { display: none !important; }
 .disabled { opacity: 0.3; pointer-events: none; filter: grayscale(100%); }
 
-/* CRT Overlay */
+/* CRT Overlay e Efeitos Visuais */
 .crt-overlay {
     position: fixed;
     top: 0; left: 0; width: 100vw; height: 100vh;
@@ -53,7 +71,7 @@ body {
     100% { background-position: 0 100vh; }
 }
 
-/* Layout Responsivo Principal */
+/* Layout Principal */
 .terminal-container {
     width: 95%;
     max-width: 1600px;
@@ -153,7 +171,7 @@ h2, h3 {
     margin-left: 5px;
 }
 
-/* Barra Progresso */
+/* Barra de Progresso */
 .progress-card { margin-bottom: 2rem; padding: 2rem; }
 
 .bar-container {
@@ -247,7 +265,7 @@ h2, h3 {
 .highlight-list li { padding: 0.5rem 0; color: var(--text-muted); }
 .highlight-list li::before { content: '> '; color: var(--neon-green); }
 
-/* Modal */
+/* Estrutura do Modal PIX */
 .modal {
     position: fixed;
     top: 0; left: 0; width: 100vw; height: 100vh;
@@ -286,9 +304,9 @@ h2, h3 {
 @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
 
-/* ==========================================
+/* ==================================================
    --- REGRAS DE RESPONSIVIDADE (MEDIA QUERIES) ---
-   ========================================== */
+   ================================================== */
 
 /* Tablets e Telas Médias */
 @media (max-width: 1024px) {
@@ -324,7 +342,7 @@ h2, h3 {
     .meta-stats { font-size: 1rem; }
 
     .pix-btns {
-        grid-template-columns: repeat(2, 1fr); /* Vira duas colunas no celular para não espremer o texto */
+        grid-template-columns: repeat(2, 1fr); /* Divide em 2x2 no celular para manter o alinhamento */
     }
 
     .tier-item {
