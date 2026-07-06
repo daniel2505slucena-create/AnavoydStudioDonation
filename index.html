@@ -1,22 +1,28 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>AnavoydDonate</title>
-	<!-- Ícone apontando para o seu arquivo no drive D -->
-	<link rel="icon" type="image/x-icon" href="../images/anavoyd.ico">
-	<link rel="stylesheet" href="../css/style.css">
-	<link href="https://googleapis.com" rel="stylesheet">
-	<script src="https://cloudflare.com"></script>
-
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AnavoydDonate</title>
+    <link rel="icon" type="image/x-icon" href="../images/anavoyd.ico">
+    <!-- Link para o CSS que está logo abaixo -->
+    <link rel="stylesheet" href="../css/style.css">
+    <!-- Fontes modernas para dar cara de jogo -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-	<header>
+
+    <header>
         <div class="header-top">
             <!-- Menu Hambúrguer Minimalista -->
             <div class="header-left">
-                <button class="menu-toggle"><span></span><span></span><span></span></button>
+                <button class="menu-toggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
             </div>
 
             <!-- Identidade Visual Centralizada -->
@@ -26,7 +32,7 @@
             
             <!-- Painel de Login Steam -->
             <div class="auth-buttons">
-                <img id="steamAvatar" src="" alt="Avatar Steam">
+                <img id="steamAvatar" src="" alt="Avatar Steam" style="display: none;">
                 <div class="user-info">
                     <span id="steamStatus" class="steam-status">Não logado</span>
                     <a id="steamBtn" href="#" class="btn-steam">Login Steam</a>
@@ -34,147 +40,151 @@
             </div>
         </div>
     </header>
-	<!-- Modal de PIX -->
-	<div id="pixModal" class="modal">
-		<div class="modal-content pix-modal">
-			<div class="modal-header">
-				<h2>Pagamento via PIX</h2>
-				<button class="close-btn" id="closePixBtn">&times;</button>
-			</div>
-			<div class="pix-content">
-				<div class="pix-amount">
-					<label>Valor da doação:</label>
-					<input type="text" id="pixAmount" placeholder="50,00" readonly>
-				</div>
-				<div class="pix-qrcode-container">
-					<div id="qrcode"></div>
-					<p style="font-size:0.85rem;color:node rgba(0, 0, 0, 0.6);margin-top:8px;">Escaneie o QR code</p>
-				</div>
-				<div class="pix-key-section">
-					<label>Chave PIX:</label>
-					<div class="pix-key-display">
-						<span id="pixKeyDisplay">daniel2505slucena@gmail.com</span>
-						<button id="copyPixBtn" class="btn-copy">Copiar</button>
-					</div>
-				</div>
-				<div class="pix-instructions">
-					<h3>Como pagar:</h3>
-					<ol>
-						<li>Abra seu app bancário</li>
-						<li>Selecione PIX e escaneie o QR code</li>
-						<li>Ou copie a chave e cole no seu banco</li>
-						<li>Confirme a transação</li>
-					</ol>
-				</div>
-				<button id="confirmPixBtn" class="btn-confirm-pix">Já paguei</button>
-			</div>
-		</div>
-	</div>
 
-	<!-- Contador de arrecadação -->
-	<section id="arrecadacao" aria-labelledby="meta-title">
-		<h2 id="meta-title">Meta: R$ 50.000,00</h2>
-		<div>
-			<strong>Arrecadado:</strong> <span id="currentAmount">R$ 0,00</span>
-			&nbsp;(<span id="percentage">0%</span>)
-		</div>
-		<div class="progress-bar">
-			<div id="progress"></div>
-		</div>
-	</section>
+    <!-- Contador de arrecadação -->
+    <section id="arrecadacao" aria-labelledby="meta-title">
+        <div class="meta-info">
+            <h2 id="meta-title">Meta: R$ 50.000,00</h2>
+            <div class="stats">
+                <strong>Arrecadado:</strong> 
+                <span id="currentAmount">R$ 0,00</span>
+                <span id="percentage" class="badge-percentage">0%</span>
+            </div>
+        </div>
+        <div class="progress-bar">
+            <div id="progress"></div>
+        </div>
+    </section>
 
-	<main>
-		<section>
-			<h2>Contribua para Anavoyd</h2>
-			<div id="steamWarning" class="steam-warning" style="display:block;">
-				<p style="color:#ff9800;font-weight:600;margin:0 0 8px 0;">⚠️ Você precisa estar logado na Steam para contribuir</p>
-				<p style="color:rgba(255,255,255,0.7);margin:0;font-size:0.9rem;">Clique em "Login Steam" no cabeçalho para conectar sua conta.</p>
-			</div>
-			<p style="margin-top:12px;color:rgba(255,255,255,0.7);">Ajude a tornar Anti-Realidade: Coração Ambissal uma realidade.
+    <main>
+        <section class="panel-card">
+            <h2>Contribua para Anavoyd</h2>
+            
+            <div id="steamWarning" class="steam-warning" style="display:block;">
+                <p class="warning-title">⚠️ Você precisa estar logado na Steam para contribuir</p>
+                <p class="warning-desc">Clique em "Login Steam" no cabeçalho para conectar sua conta.</p>
+            </div>
+            
+            <p class="project-desc">Ajude a tornar <strong>Anti-Realidade: Coração Ambissal</strong> uma realidade. Cada contribuição acelera o desenvolvimento do jogo, permitindo a criação de novos conteúdos, melhorias técnicas e uma experiência cada vez mais imersiva para todos os jogadores.</p>
+            
+            <div class="pix-buttons" id="pixButtonsContainer">
+                <button class="pix-btn" data-amount="20" disabled>PIX R$ 20</button>
+                <button class="pix-btn" data-amount="50" disabled>PIX R$ 50</button>
+                <button class="pix-btn" data-amount="100" disabled>PIX R$ 100</button>
+                <button id="pixCustomBtn" class="pix-btn custom" disabled>PIX Custom</button>
+            </div>
+        </section>
 
-Cada contribuição acelera o desenvolvimento do jogo, permitindo a criação de novos conteúdos, melhorias técnicas e uma experiência cada vez mais imersiva para todos os jogadores:</p>
-			<div class="pix-buttons" id="pixButtonsContainer">
-				<button class="pix-btn" data-amount="20" disabled>PIX R$ 20</button>
-				<button class="pix-btn" data-amount="50" disabled>PIX R$ 50</button>
-				<button class="pix-btn" data-amount="100" disabled>PIX R$ 100</button>
-				<button id="pixCustomBtn" class="pix-btn" disabled>PIX Custom</button>
-			</div>
-		</section>
+        <section class="panel-card">
+            <h2>Benefícios por Tier</h2>
+            <p class="section-subtitle">Desbloqueie recompensas exclusivas conforme você contribui:</p>
+            
+            <div class="benefits-grid">
+                <div class="benefit-tier bronze" data-min="20">
+                    <div class="tier-badge">Bronze</div>
+                    <div class="tier-amount">R$ 20+</div>
+                    <ul class="tier-benefits">
+                        <li>✓ Crédito em nome</li>
+                        <li>✓ Notícias do desenvolvimento</li>
+                    </ul>
+                </div>
+                <div class="benefit-tier gold" data-min="50">
+                    <div class="tier-badge">Ouro</div>
+                    <div class="tier-amount">R$ 50+</div>
+                    <ul class="tier-benefits">
+                        <li>✓ Tudo de Bronze</li>
+                        <li>✓ Acesso antecipado a testes</li>
+                        <li>✓ Badge especial</li>
+                    </ul>
+                </div>
+                <div class="benefit-tier platinum" data-min="100">
+                    <div class="tier-badge">Platina</div>
+                    <div class="tier-amount">R$ 100+</div>
+                    <ul class="tier-benefits">
+                        <li>✓ Tudo de Ouro</li>
+                        <li>✓ Nome nos créditos</li>
+                        <li>✓ Item cosmético exclusivo</li>
+                    </ul>
+                </div>
+                <div class="benefit-tier diamond" data-min="500">
+                    <div class="tier-badge">Diamante</div>
+                    <div class="tier-amount">R$ 500+</div>
+                    <ul class="tier-benefits">
+                        <li>✓ Tudo de Platina</li>
+                        <li>✓ Consultoria dedicada</li>
+                        <li>✓ Skin exclusiva Diamante</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div id="currentTier" class="current-tier">
+                Seu tier atual: <span class="tier-none">Nenhum (Contribua para desbloquear)</span>
+            </div>
+        </section>
 
-		<section>
-			<h2>Benefícios por Tier</h2>
-			<p>Desbloqueie recompensas exclusivas conforme você contribui:</p>
-			<div class="benefits-grid">
-				<div class="benefit-tier" data-min="20">
-					<div class="tier-badge">Bronze</div>
-					<div class="tier-amount">R$ 20+</div>
-					<ul class="tier-benefits">
-						<li>✓ Crédito em nome</li>
-						<li>✓ Acesso às notícias do desenvolvimento</li>
-					</ul>
-				</div>
-				<div class="benefit-tier" data-min="50">
-					<div class="tier-badge gold">Ouro</div>
-					<div class="tier-amount">R$ 50+</div>
-					<ul class="tier-benefits">
-						<li>✓ Tudo de Bronze</li>
-						<li>✓ Acesso antecipado às versões de teste</li>
-						<li>✓ Badge especial</li>
-					</ul>
-				</div>
-				<div class="benefit-tier" data-min="100">
-					<div class="tier-badge platinum">Platina</div>
-					<div class="tier-amount">R$ 100+</div>
-					<ul class="tier-benefits">
-						<li>✓ Tudo de Ouro</li>
-						<li>✓ Nome no créditos</li>
-						<li>✓ Item cosmético exclusivo</li>
-					</ul>
-				</div>
-				<div class="benefit-tier" data-min="500">
-					<div class="tier-badge diamond">Diamante</div>
-					<div class="tier-amount">R$ 500+</div>
-					<ul class="tier-benefits">
-						<li>✓ Tudo de Platina</li>
-						<li>✓ Consultoria dedicada</li>
-						<li>✓ Skin exclusiva de apoiador Diamante</li>
-					</ul>
-				</div>
-			</div>
-			<div id="currentTier" class="current-tier" style="margin-top:16px;text-align:center;color:rgba(255,255,255,0.7);">
-				Seu tier atual: <span style="color:var(--primary);font-weight:600;">Nenhum (Contribua para desbloquear)</span>
-			</div>
-		</section>
+        <section class="panel-card">
+            <h2>Sobre Anavoyd</h2>
+            <p>Bem-vindo a <strong>Anti-Realidade: Coração Ambissal</strong>. Este é um RPG focado em exploração, narrativa e mistérios envolvendo realidades alternativas.</p>
+            <p>Cada decisão pode alterar o rumo da história, enquanto criaturas, fenômenos inexplicáveis e personagens marcantes revelam um universo cheio de segredos. Sua contribuição ajuda a transformar essa visão em um jogo completo e de alta qualidade.</p>
+            <p><a href="#" class="link-more">Saiba mais sobre o jogo →</a></p>
+        </section>
 
-		<section>
-			<h2>Sobre Anavoyd</h2>
-			<p>Bem-vindo a <strong>Anti-Realidade: Coração Ambissal</strong>. é um RPG focado em exploração, narrativa e mistérios envolvendo realidades alternativas.
+        <section class="panel-card">
+            <h2>Destaques do Projeto</h2>
+            <ul class="highlights-list">
+                <li>Desenvolvimento de novas animações</li>
+                <li>Compra e criação de assets originais</li>
+                <li>Modelagem e efeitos visuais</li>
+                <li>Trilha sonora e efeitos sonoros</li>
+                <li>Hospedagem e infraestrutura online</li>
+                <li>Contratação de artistas e colaboradores</li>
+                <li>Marketing e divulgação do projeto</li>
+                <li>Ferramentas e licenças de desenvolvimento</li>
+            </ul>
+        </section>
+    </main>
 
-Cada decisão pode alterar o rumo da história, enquanto criaturas, fenômenos inexplicáveis e personagens marcantes revelam um universo cheio de segredos.
+    <!-- Modal de PIX -->
+    <div id="pixModal" class="modal">
+        <div class="modal-content pix-modal">
+            <div class="modal-header">
+                <h2>Pagamento via PIX</h2>
+                <button class="close-btn" id="closePixBtn">&times;</button>
+            </div>
+            <div class="pix-content">
+                <div class="pix-amount">
+                    <label>Valor da doação:</label>
+                    <input type="text" id="pixAmount" placeholder="50,00" readonly>
+                </div>
+                <div class="pix-qrcode-container">
+                    <div id="qrcode"></div>
+                    <p class="qrcode-scan-text">Escaneie o QR code acima</p>
+                </div>
+                <div class="pix-key-section">
+                    <label>Chave PIX:</label>
+                    <div class="pix-key-display">
+                        <span id="pixKeyDisplay">daniel2505slucena@gmail.com</span>
+                        <button id="copyPixBtn" class="btn-copy">Copiar</button>
+                    </div>
+                </div>
+                <div class="pix-instructions">
+                    <h3>Como pagar:</h3>
+                    <ol>
+                        <li>Abra seu app bancário</li>
+                        <li>Selecione PIX e escaneie o QR code</li>
+                        <li>Ou copie a chave e cole no seu banco</li>
+                        <li>Confirme a transação</li>
+                    </ol>
+                </div>
+                <button id="confirmPixBtn" class="btn-confirm-pix">Já paguei</button>
+            </div>
+        </div>
+    </div>
 
-Sua contribuição ajuda a transformar essa visão em um jogo completo e de alta qualidade.</p>
-			<p><a href="#">Saiba mais sobre o jogo →</a></p>
-		</section>
-		<section>
-			<h2>Destaques do Projeto</h2>
-			<ul>
-				<li> Desenvolvimento de novas animações</li>
-				<li> Compra e criação de assets originais</li>
-				<li> Modelagem e efeitos visuais</li>
-				<li> DTrilha sonora e efeitos sonoros</li>
-				<li> Melhorias no servidor do estúdio</li>
-				<li> Melhorar o servidor do estúdio</li>
-				<li> Hospedagem e infraestrutura online</li>
-				<li> Contratação de artistas e colaboradores</li>
-				<li> Marketing e divulgação do projeto</li>
-				<li> Custos de publicação e manutenção</li>
-				<li> Ferramentas e licenças de desenvolvimento</li>
-			</ul>
-		</section>
-	</main>
-	<footer>
-		<p>© 2026 Anavoyd - Anti-Realidade: Coração Ambissal | Todos os direitos reservados</p>
-	</footer>
+    <footer>
+        <p>© 2026 Anavoyd - Anti-Realidade: Coração Ambissal | Todos os direitos reservados</p>
+    </footer>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="../js/main.js"></script>
 </body>
