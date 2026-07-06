@@ -1,9 +1,11 @@
 // ==========================================
 // --- CONFIGURAÇÃO DINÂMICA DA API ---
 // ==========================================
+// Se o site rodar localmente, usa a porta 3000. 
+// Quando estiver no seu domínio do GitHub Pages, substitua o link do Render pelo link que o Render te der.
 const URL_API = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
     ? 'http://localhost:3000'
-    : window.location.origin;
+    : 'https://SUA-URL-AQUI.onrender.com'; // <-- Substitua pelo link gerado no Render quando subir o back-end
 
 // ==========================================
 // --- ESTADO GLOBAL DA APLICAÇÃO ---
@@ -23,10 +25,12 @@ let estado = {
 // --- PERSISTÊNCIA REAL DE DADOS ---
 // ==========================================
 async function carregarDadosEProgresso() {
+    // Carrega o total que este usuário específico doou
     let salvoUsuario = localStorage.getItem('usuario_total_doado');
     estado.totalDoadoPeloUsuario = salvoUsuario ? parseFloat(salvoUsuario) : 0.00;
 
     try {
+        // Busca do servidor o progresso real acumulado globalmente de todas as transferências
         const resposta = await fetch(`${URL_API}/api/meta-progresso`);
         const dados = await resposta.json();
         estado.arrecadadoAtual = parseFloat(dados.arrecadadoAtual || 0);
@@ -123,6 +127,7 @@ function inicializarLoginSteam() {
 
 async function buscarDadosPerfilSteam(steamId) {
     try {
+        // Envia o pedido para o seu back-end buscar o XML público sem CORS e sem Chave API
         const urlAlvo = `${URL_API}/api/steam-perfil/${steamId}`;
         const resposta = await fetch(urlAlvo);
         const textoXml = await resposta.text();
@@ -217,7 +222,7 @@ async function abrirModalPix(valor) {
             alert("Erro ao gerar Pix.");
         }
     } catch (error) {
-        console.error("Erro na comunicação:", error);
+        console.error("Erro na comunicação com a API do Pix:", error);
     }
 }
 
@@ -248,7 +253,7 @@ if (el.pixCustomBtn) {
         if (!isNaN(valorLimpo) && valorLimpo >= 0.01) {
             abrirModalPix(valorLimpo);
         } else {
-            alert("Valor inválido.");
+            alert("Valor inválido. Digite apenas números.");
         }
     });
 }
@@ -265,9 +270,11 @@ if (el.confirmPixBtn) {
             const resultado = await resposta.json();
             
             if (resultado.pago === true) {
+                // Sincroniza o valor de arrecadação global que o servidor atualizou e guardou
                 estado.arrecadadoAtual = resultado.arrecadadoAtual;
                 estado.totalDoadoPeloUsuario += estado.valorSelecionadoPix;
                 
+                // Salva os backups locais para consistência rápida do usuário
                 localStorage.setItem('meta_global_arrecadada', estado.arrecadadoAtual.toString());
                 localStorage.setItem('usuario_total_doado', estado.totalDoadoPeloUsuario.toString());
                 
@@ -286,6 +293,7 @@ if (el.confirmPixBtn) {
     });
 }
 
+// Inicialização limpa e assíncrona ao abrir a página
 document.addEventListener('DOMContentLoaded', async () => {
     await carregarDadosEProgresso();
     inicializarLoginSteam();

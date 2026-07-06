@@ -1,8 +1,0 @@
-{
-  "type": "module",
-  "dependencies": {
-    "express": "latest",
-    "cors": "latest",
-    "mercadopago": "latest"
-  }
-}
