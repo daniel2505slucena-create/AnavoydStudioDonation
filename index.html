@@ -9,11 +9,29 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    
+    <!-- Configuração do Firebase -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+        import { getFirestore } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+        
+        const firebaseConfig = {
+            apiKey: "AIzaSyAVt79Qbzzy_sz0B_B2kDgjK9oX3xMTt6Y",
+            authDomain: "anavoydstudiodonate.firebaseapp.com",
+            projectId: "anavoydstudiodonate",
+            storageBucket: "anavoydstudiodonate.firebasestorage.app",
+            messagingSenderId: "30138913339",
+            appId: "1:30138913339:web:ad95b9d1d5a580e8cd821e",
+            measurementId: "G-1783LPREVW"
+        };
+        
+        const app = initializeApp(firebaseConfig);
+        window.db = getFirestore(app);
+    </script>
 </head>
 <body>
 
     <div class="bg-back-image"></div>
-
     <div class="crt-overlay"></div>
     <div class="vignette"></div>
 
@@ -112,6 +130,6 @@
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    <script src="../js/main.js"></script>
+    <script type="module" src="../js/main.js"></script>
 </body>
 </html>

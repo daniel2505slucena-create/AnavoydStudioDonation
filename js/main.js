@@ -1,4 +1,9 @@
 // ==========================================
+// --- IMPORTAÇÕES FIREBASE (ADICIONADO) ---
+// ==========================================
+import { doc, onSnapshot } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+
+// ==========================================
 // --- CONFIGURAÇÃO DINÂMICA DA API ---
 // ==========================================
 const URL_API = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
@@ -57,20 +62,32 @@ const el = {
 const formatarMoeda = (valor) => valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
 // ==========================================
-// --- PERSISTÊNCIA E CARREGAMENTO ---
+// --- PERSISTÊNCIA E CARREGAMENTO (FIREBASE) ---
 // ==========================================
 async function carregarDadosEProgresso() {
+    // 1. Lógica original de backup local
     let salvoUsuario = localStorage.getItem('usuario_total_doado');
     estado.totalDoadoPeloUsuario = salvoUsuario ? parseFloat(salvoUsuario) : 0.00;
 
+    // 2. Conexão Firestore em tempo real (Substitui o fetch da meta)
+    if (window.db) {
+        // Listener para Meta Global
+        const metaRef = doc(window.db, "stats", "global");
+        onSnapshot(metaRef, (docSnap) => {
+            if (docSnap.exists()) {
+                estado.arrecadadoAtual = parseFloat(docSnap.data().arrecadado || 0);
+                atualizarProgressoGeral();
+            }
+        });
+    }
+
+    // 3. (Opcional) Backup de rede caso Firestore falhe
     try {
         const resposta = await fetch(`${URL_API}/api/meta-progresso`);
         const dados = await resposta.json();
-        estado.arrecadadoAtual = parseFloat(dados.arrecadadoAtual || 0);
+        if(!estado.arrecadadoAtual) estado.arrecadadoAtual = parseFloat(dados.arrecadadoAtual || 0);
     } catch (e) {
-        console.error("Servidor em standby ou offline, carregando backup local:", e);
-        let backupGlobal = localStorage.getItem('meta_global_arrecadada');
-        estado.arrecadadoAtual = backupGlobal ? parseFloat(backupGlobal) : 0.00;
+        console.warn("Firestore ativo, API local em espera.");
     }
     
     atualizarProgressoGeral();
@@ -106,7 +123,6 @@ function atualizarTierUsuario() {
 // ==========================================
 function inicializarLoginSteam() {
     if (el.steamBtn) {
-        // Uso de addEventListener evita conflitos de sobrescrita
         el.steamBtn.addEventListener('click', (e) => {
             if (!estado.logadoSteam) {
                 e.preventDefault();
@@ -140,7 +156,6 @@ async function buscarDadosPerfilSteam(steamId) {
 }
 
 async function efetuarliveLoginInterface(steamId) {
-    // Redireciona para a função principal com nome correto
     efetuarLoginInterface(steamId);
 }
 
@@ -149,9 +164,19 @@ async function efetuarLoginInterface(steamId) {
     estado.steamId = steamId;
     localStorage.setItem('steam_user', steamId);
 
+    // Listener Firestore para o USUÁRIO ESPECÍFICO (Ao logar)
+    if (window.db) {
+        const userRef = doc(window.db, "users", steamId);
+        onSnapshot(userRef, (docSnap) => {
+            if (docSnap.exists()) {
+                estado.totalDoadoPeloUsuario = parseFloat(docSnap.data().totalDoado || 0);
+                atualizarTierUsuario();
+            }
+        });
+    }
+
     if (el.steamBtn) {
         el.steamBtn.textContent = "[ LOGOUT ]";
-        // Altera o comportamento do clique para limpar a sessão
         el.steamBtn.addEventListener('click', (e) => {
             if (estado.logadoSteam) {
                 e.preventDefault();
@@ -208,7 +233,7 @@ async function abrirModalPix(valor) {
         const response = await fetch(`${URL_API}/api/gerar-pix`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ valor: valor })
+            body: JSON.stringify({ valor: valor, steamId: estado.steamId })
         });
 
         const data = await response.json();
@@ -296,14 +321,8 @@ if (el.confirmPixBtn) {
             const resultado = await resposta.json();
             
             if (resultado.pago === true) {
-                estado.arrecadadoAtual = resultado.arrecadadoAtual;
-                estado.totalDoadoPeloUsuario += estado.valorSelecionadoPix;
-                
-                localStorage.setItem('meta_global_arrecadada', estado.arrecadadoAtual.toString());
-                localStorage.setItem('usuario_total_doado', estado.totalDoadoPeloUsuario.toString());
-                
-                atualizarProgressoGeral();
-                atualizarTierUsuario();
+                // Firebase atualiza automaticamente via Snapshot, não precisamos atualizar o estado manualmente aqui
+                // O estado será atualizado quando o Firestore responder a mudança
                 fecharModalPix();
                 alert("AUTENTICADO: Transação aceita e registrada.");
             } else {
@@ -319,13 +338,10 @@ if (el.confirmPixBtn) {
 }
 
 // ==========================================
-// --- INICIALIZAÇÃO ASSÍNCRONA CORRIGIDA ---
+// --- INICIALIZAÇÃO ASSÍNCRONA ---
 // ==========================================
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Ativa a interface e eventos IMEDIATAMENTE (Corrige o botão morto)
     inicializarLoginSteam();
     verificarSessaoExistente();
-    
-    // 2. Carrega as informações da API em background (Sem bloquear os botões)
     carregarDadosEProgresso();
 });
