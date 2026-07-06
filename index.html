@@ -2,61 +2,62 @@
 <html lang="pt-BR">
 <head>
     <meta charset="utf-8">
-    <title>ANAVOYD // PROJETO</title>
+    <title>ANAVOYD // SYSTEM_LINK</title>
     <link rel="stylesheet" href="../css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;600&family=JetBrains+Mono&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <div class="noise-overlay"></div>
+    <div class="crt-overlay"></div>
 
     <header>
-        <div class="logo-box">
+        <div class="logo-wrapper">
             <img src="../images/anavoyd.png" alt="Anavoyd" class="brand-img">
         </div>
-        <nav class="user-nav">
-            <span id="steamStatus">DESCONECTADO</span>
-            <a id="steamBtn" href="#">LOGIN_STEAM</a>
-        </nav>
+        <div class="status-panel">
+            <span id="steamStatus">SYSTEM_OFFLINE</span>
+            <a id="steamBtn" href="#" class="btn-link">AUTH_STEAM</a>
+        </div>
     </header>
 
     <main>
-        <section class="main-display">
-            <h1 class="title">CORAÇÃO<br>AMBISSAL</h1>
-            
-            <div class="status-panel">
-                <div class="row">
+        <section class="hero-data">
+            <h1>CORAÇÃO_AMBISSAL</h1>
+            <div class="progress-block">
+                <div class="meta-txt">META: 50.000,00 BRL</div>
+                <div class="bar-border">
+                    <div id="progress" class="bar-fill"></div>
+                </div>
+                <div class="stats-txt">
                     <span id="currentAmount">R$ 0,00</span>
                     <span id="percentage">0%</span>
-                </div>
-                <div class="progress-container">
-                    <div id="progress" class="progress-bar"></div>
                 </div>
             </div>
         </section>
 
-        <section class="controls">
-            <div class="card-donate">
-                <div id="steamWarning">⚠️ LOGUE PARA PROSSEGUIR</div>
-                <div class="grid-btns" id="pixButtonsContainer">
-                    <button class="b-btn" data-amount="20">R$20</button>
-                    <button class="b-btn" data-amount="50">R$50</button>
-                    <button class="b-btn" data-amount="100">R$100</button>
-                    <button id="pixCustomBtn" class="b-btn">OTHER</button>
+        <section class="action-grid">
+            <div class="panel">
+                <div id="steamWarning" class="warning">!_AUTH_REQUIRED_TO_CONTRIBUTE</div>
+                <div class="pix-btns" id="pixButtonsContainer">
+                    <button class="b-pix" data-amount="20">20</button>
+                    <button class="b-pix" data-amount="50">50</button>
+                    <button class="b-pix" data-amount="100">100</button>
+                    <button id="pixCustomBtn" class="b-pix custom">_OTHER</button>
                 </div>
             </div>
 
-            <div class="card-tier">
-                <div id="currentTier">TIER ATUAL: NULL</div>
+            <div class="panel">
+                <div id="currentTier">TIER: _VOID</div>
             </div>
         </section>
     </main>
 
     <div id="pixModal" class="modal">
-        <div class="modal-inner">
-            <button id="closePixBtn" class="close-x">FECHAR</button>
-            <div id="qrcode" class="qr-box"></div>
+        <div class="modal-box">
+            <button id="closePixBtn" class="close-x">[CLOSE]</button>
+            <div id="qrcode" class="qr-zone"></div>
             <input type="text" id="pixKeyDisplay" readonly>
-            <button id="confirmPixBtn" class="confirm-btn">PAGO</button>
+            <button id="confirmPixBtn" class="btn-confirm">SEND_PAYMENT</button>
         </div>
     </div>
 

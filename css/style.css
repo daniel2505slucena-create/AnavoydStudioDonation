@@ -1,124 +1,136 @@
 :root {
-    --brutal-black: #0a0a0a;
-    --brutal-white: #ffffff;
-    --accent: #ff3300;
+    --bg-color: #0d0d0d;
+    --neon-amber: #ffb703;
+    --steel-grey: #2b2d2f;
+    --txt-main: #e0e0e0;
 }
 
 body {
-    background-color: var(--brutal-black);
-    color: var(--brutal-white);
-    font-family: 'Courier New', Courier, monospace;
+    background-color: var(--bg-color);
+    color: var(--txt-main);
+    font-family: 'Rajdhani', sans-serif;
     margin: 0;
-    overflow-x: hidden;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
-/* textura de fundo pra nao parecer limpo demais */
-.noise-overlay {
+/* scanlines de monitor antigo */
+.crt-overlay {
     position: fixed;
     top: 0; left: 0; width: 100%; height: 100%;
-    background: url('https://grainy-gradients.vercel.app/noise.svg');
-    opacity: 0.1;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+    background-size: 100% 4px, 3px 100%;
     pointer-events: none;
     z-index: 999;
 }
-
-/* aqui a opacidade da imagem fica visivel mas com tom de documento antigo */
-.brand-img {
-    width: 150px;
-    opacity: 0.75;
-    filter: grayscale(0.5) contrast(1.2);
-    transition: 0.3s;
-}
-.brand-img:hover { opacity: 1; }
 
 header {
     display: flex;
     justify-content: space-between;
     padding: 2rem;
-    border-bottom: 4px solid var(--brutal-white);
+    border-bottom: 2px solid var(--steel-grey);
 }
 
-.main-display {
+.brand-img {
+    width: 140px;
+    opacity: 0.85; /* imagem visível mas com textura */
+    filter: sepia(0.3) brightness(0.9);
+}
+
+.btn-link {
+    color: var(--neon-amber);
+    text-decoration: none;
+    border: 1px solid var(--neon-amber);
+    padding: 0.5rem 1rem;
+    font-weight: 600;
+}
+
+.hero-data {
     padding: 4rem 2rem;
+    max-width: 800px;
 }
 
-.title {
-    font-size: 8rem;
-    line-height: 0.8;
-    margin-bottom: 3rem;
-    letter-spacing: -5px;
+h1 {
+    font-size: 6rem;
+    margin: 0;
+    line-height: 1;
+    color: #fff;
+    text-shadow: 2px 2px 0 var(--neon-amber);
 }
 
-.progress-container {
-    width: 100%;
-    height: 40px;
-    border: 4px solid var(--brutal-white);
-    padding: 4px;
+.bar-border {
+    border: 1px solid var(--steel-grey);
+    padding: 2px;
+    height: 20px;
 }
 
-.progress-bar {
+.bar-fill {
     height: 100%;
-    background: var(--accent);
+    background: var(--neon-amber);
     width: 0%;
 }
 
-.controls {
-    display: flex;
-    gap: 2rem;
-    padding: 2rem;
-}
-
-.card-donate, .card-tier {
-    border: 4px solid var(--brutal-white);
-    padding: 2rem;
-    flex: 1;
-    background: #111;
-}
-
-.grid-btns {
+.action-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-    margin-top: 1rem;
+    gap: 2rem;
+    padding: 0 2rem;
 }
 
-.b-btn {
-    background: var(--brutal-white);
-    color: var(--brutal-black);
-    border: none;
-    padding: 1.5rem;
-    font-weight: bold;
+.panel {
+    border: 1px solid var(--steel-grey);
+    background: #151515;
+    padding: 2rem;
+}
+
+.b-pix {
+    background: transparent;
+    border: 1px solid var(--neon-amber);
+    color: var(--neon-amber);
+    padding: 1rem;
     cursor: pointer;
-    font-size: 1.2rem;
+    font-family: 'JetBrains Mono', monospace;
 }
 
-.b-btn:hover {
-    background: var(--accent);
-    color: white;
+.b-pix:hover {
+    background: var(--neon-amber);
+    color: #000;
+}
+
+.warning {
+    color: #ff4d4d;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    margin-bottom: 1rem;
 }
 
 .modal {
     display: none;
     position: fixed;
     top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.9);
+    background: rgba(0,0,0,0.95);
 }
 
-.modal-inner {
-    width: 300px;
+.modal-box {
+    width: 350px;
     margin: 10vh auto;
-    border: 4px solid var(--accent);
-    background: var(--brutal-black);
+    border: 2px solid var(--neon-amber);
+    background: #000;
     padding: 2rem;
     text-align: center;
 }
 
-.confirm-btn {
+.qr-zone {
+    background: #fff;
+    padding: 10px;
+    margin: 1rem 0;
+}
+
+.btn-confirm {
     width: 100%;
-    background: var(--accent);
+    background: var(--neon-amber);
     border: none;
     padding: 1rem;
     margin-top: 1rem;
-    color: white;
-    cursor: pointer;
+    font-weight: bold;
 }
