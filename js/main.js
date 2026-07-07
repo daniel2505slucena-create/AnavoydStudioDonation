@@ -1,6 +1,6 @@
 /**
  * MAIN.JS - SISTEMA DE DOAÇÃO E TIER STEAM
- * VERSÃO DEFINITIVA: SEM DUPLICAÇÃO, COM CONEXÃO GARANTIDA
+ * VERSÃO DEFINITIVA CORRIGIDA - SEM DUPLICAÇÕES
  */
 
 import { 
@@ -21,7 +21,7 @@ const URL_API = window.location.hostname === 'localhost' || window.location.host
 let estado = {
     logadoSteam: false,
     steamId: null,
-    steamName: "Carregando...", // Nova propriedade para o nome
+    steamName: "Carregando...", 
     metaTotal: 50000.00,
     arrecadadoAtual: 0.00,
     totalDoadoPeloUsuario: 0.00,
@@ -64,7 +64,6 @@ const el = {
     confirmPixBtn: document.getElementById('confirmPixBtn'),
     currentAmount: document.getElementById('currentAmount') || document.getElementById('arrecadado'),
     percentage: document.getElementById('percentage') || document.getElementById('porcentagem'),
-    // Busca flexível: garante que acha a barra independente do nome no HTML
     progressBar: document.getElementById('progress') || document.getElementById('progressBar') || document.querySelector('.progress-bar'),
     currentTier: document.getElementById('currentTier')
 };
@@ -86,7 +85,6 @@ function atualizarProgressoGeral() {
     if (el.percentage) el.percentage.textContent = `${porcentagem.toFixed(2)}%`;
     if (el.progressBar) {
         el.progressBar.style.width = `${porcentagem}%`;
-        // Se houver qualquer valor doado mas a porcentagem for menor que 1%, força 1% visualmente para a barra aparecer
         if (estado.arrecadadoAtual > 0 && porcentagem < 1) {
             el.progressBar.style.width = "1%";
         }
@@ -95,91 +93,7 @@ function atualizarProgressoGeral() {
 
 function atualizarTierUsuario() {
     let tierAtualNome = "NENHUM";
-    let corTier = "#ff4d4d";
-    
-    if (estado.totalDoadoPeloUsuario >= 500) { tierAtualNome = "DIAMANTE"; corTier = "#00f2ff"; }
-    else if (estado.totalDoadoPeloUsuario >= 100) { tierAtualNome = "PLATINA"; corTier = "#a000ff"; }
-    else if (estado.totalDoadoPeloUsuario >= 50) { tierAtualNome = "OURO"; corTier = "#ffd700"; }
-    else if (estado.totalDoadoPeloUsuario >= 20) { tierAtualNome = "BRONZE"; corTier = "#cd7f32"; }
-
-    if (el.currentTier) {
-        el.currentTier.innerHTML = `SEU TIER ATUAL: <span style="color:${corTier}; font-weight:700;">${tierAtualNome}</span> (TOTAL DOADO: ${formatarMoeda(estado.totalDoadoPeloUsuario)})`;
-    }
-}
-
-// ==================================================================================
-// CONEXÃO COM O FIREBASE (SEM DUPLICAÇÃO DE LEITURA)
-// ==================================================================================
-function conectarFirebase() {
-    // Se o script do Firebase ainda não carregou, tenta novamente em 100 milissegundos
-    if (!window.db) {
-        setTimeout(conectarFirebase, 100);
-        return;
-    }
-
-    // Trava para registrar o listener da meta GERAL apenas UMA vez
-    if (!listenerGlobalRegistrado) {
-        listenerGlobalRegistrado = true;
-        onSnapshot(doc(window.db, "stats", "global"), (snap) => {
-            if (snap.exists()) {
-                estado.arrecadadoAtual = parseFloat(snap.data().arrecadado || 0);
-                atualizarProgressoGeral();
-            }
-        });
-    }
-
-    // Trava para registrar o listener do USUÁRIO apenas UMA vez
-    if (estado.steamId && !listenerUsuarioRegistrado) {
-        listenerUsuarioRegistrado = true;
-        const userRef = doc(window.db, "users", estado.steamId);
-        onSnapshot(userRef, (docSnap) => {
-            if (docSnap.exists()) {
-                estado.totalDoadoPeloUsuario = parseFloat(docSnap.data().totalDoado || 0);
-                atualizarTierUsuario();
-            }
-        });
-    }
-}
-
-// ==================================================================================
-// LÓGICA DE LOGIN STEAM E AUTENTICAÇÃO
-// ==================================================================================
-async function efetuarLoginInterface(steamId) {
-    estado.logadoSteam = true;
-    estado.steamId = steamId;
-    localStorage.setItem('steam_user', steamId);
-
-    // Conecta ao Firebase para escutar os dados em tempo real
-    conectarFirebase();
-
-    // Busca o Nome atualizado do usuário através da nossa rota do Backend
-    try {
-        const resposta = await fetch(`${URL_API}/api/steam-perfil/${steamId}`);
-        const dadosSteam = await resposta.json();
-        estado.steamName = dadosSteam.steamName || "Usuário Steam";
-    } catch (e) {
-        estado.steamName = "Usuário Steam";
-        console.error("Não foi possível carregar o nome da Steam:", e);
-    }
-
-    if (el.steamBtn) el.steamBtn.textContent = "[ LOGOUT ]";
-    if (el.steamWarning) el.steamWarning.classList.add('hidden');
-    if (el.pixContainer) el.pixContainer.classList.remove('disabled');
-    if (el.statusIndicator) {
-        el.statusIndicator.classList.remove('offline');
-        el.statusIndicator.classList.add('online');
-    }
-    
-    // Substitui o texto de status pelo Nome da Steam do usuário
-    if (el.steamStatus) el.steamStatus.textContent = estado.steamName;
-
-    // Força a atualização do painel de tiers com os novos dados
-    atualizarTierUsuario();
-}
-
-function atualizarTierUsuario() {
-    let tierAtualNome = "NENHUM";
-    let corTier = "#6b7280"; // Cinza padrão
+    let corTier = "#6b7280"; 
     
     if (estado.totalDoadoPeloUsuario >= 500) { tierAtualNome = "DIAMANTE"; corTier = "#00f2ff"; }
     else if (estado.totalDoadoPeloUsuario >= 100) { tierAtualNome = "PLATINA"; corTier = "#b026ff"; }
@@ -197,6 +111,97 @@ function atualizarTierUsuario() {
         `;
     }
 }
+
+// ==================================================================================
+// CONEXÃO COM O FIREBASE (SEM DUPLICAÇÃO DE LEITURA)
+// ==================================================================================
+function conectarFirebase() {
+    if (!window.db) {
+        setTimeout(conectarFirebase, 100);
+        return;
+    }
+
+    if (!listenerGlobalRegistrado) {
+        listenerGlobalRegistrado = true;
+        onSnapshot(doc(window.db, "stats", "global"), (snap) => {
+            if (snap.exists()) {
+                estado.arrecadadoAtual = parseFloat(snap.data().arrecadado || 0);
+                atualizarProgressoGeral();
+            }
+        });
+    }
+
+    if (estado.steamId && !listenerUsuarioRegistrado) {
+        listenerUsuarioRegistrado = true;
+        const userRef = doc(window.db, "users", estado.steamId);
+        onSnapshot(userRef, (docSnap) => {
+            if (docSnap.exists()) {
+                estado.totalDoadoPeloUsuario = parseFloat(docSnap.data().totalDoado || 0);
+                atualizarTierUsuario();
+            }
+        });
+    }
+}
+
+// ==================================================================================
+// LÓGICA DE LOGIN STEAM E AUTENTICAÇÃO
+// ==================================================================================
+function efetuarLoginInterface(steamId) {
+    estado.logadoSteam = true;
+    estado.steamId = steamId;
+    localStorage.setItem('steam_user', steamId);
+
+    conectarFirebase();
+
+    if (el.steamBtn) el.steamBtn.textContent = "[ LOGOUT ]";
+    if (el.steamWarning) el.steamWarning.classList.add('hidden');
+    if (el.pixContainer) el.pixContainer.classList.remove('disabled');
+    if (el.statusIndicator) {
+        el.statusIndicator.classList.remove('offline');
+        el.statusIndicator.classList.add('online');
+    }
+    
+    estado.steamName = "Carregando perfil...";
+    if (el.steamStatus) el.steamStatus.textContent = estado.steamName;
+
+    atualizarTierUsuario();
+
+    // Faz a requisição em segundo plano para não travar a tela se a Render estiver dormindo
+    fetch(`${URL_API}/api/steam-perfil/${steamId}`)
+        .then(resposta => resposta.json())
+        .then(dadosSteam => {
+            estado.steamName = dadosSteam.steamName || "Usuário Steam";
+            if (el.steamStatus) el.steamStatus.textContent = estado.steamName;
+            atualizarTierUsuario(); 
+        })
+        .catch(e => {
+            console.error("Não foi possível carregar o nome da Steam:", e);
+            estado.steamName = "Usuário Steam";
+            if (el.steamStatus) el.steamStatus.textContent = estado.steamName;
+            atualizarTierUsuario();
+        });
+}
+
+function inicializarLoginSteam() {
+    el.steamBtn?.addEventListener('click', (e) => {
+        if (!estado.logadoSteam) {
+            e.preventDefault();
+            window.location.href = STEAM_OPENID_URL;
+        } else {
+            localStorage.removeItem('steam_user');
+            window.location.reload();
+        }
+    });
+    
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('openid.identity')) {
+        const identityUrl = urlParams.get('openid.identity');
+        const steamIdReal = identityUrl.split('/').pop();
+        efetuarLoginInterface(steamIdReal);
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
+}
+
 // ==================================================================================
 // LÓGICA DE PIX E MODAL (COM QR CODE UNIVERSAL)
 // ==================================================================================
@@ -223,7 +228,6 @@ async function abrirModalPix(valor) {
             estado.idTransacaoAtual = data.idTransacao;
             el.qrcodeContainer.innerHTML = "";
             
-            // Busca a biblioteca independente de como o script foi importado no HTML
             const QRCodeLib = window.QRCode || typeof QRCode !== 'undefined' ? (window.QRCode || QRCode) : null;
             
             if (QRCodeLib) {
@@ -311,8 +315,6 @@ el.pixKeyDisplay?.addEventListener('click', () => {
 // ==================================================================================
 document.addEventListener('DOMContentLoaded', () => {
     inicializarLoginSteam();
-    
-    // Inicia a tentativa de conexão com o Firebase (sem duplicar)
     conectarFirebase();
 
     const usuarioSalvo = localStorage.getItem('steam_user');
