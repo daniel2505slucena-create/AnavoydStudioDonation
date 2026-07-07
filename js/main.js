@@ -21,6 +21,7 @@ const URL_API = window.location.hostname === 'localhost' || window.location.host
 let estado = {
     logadoSteam: false,
     steamId: null,
+    steamName: "Carregando...", // Nova propriedade para o nome
     metaTotal: 50000.00,
     arrecadadoAtual: 0.00,
     totalDoadoPeloUsuario: 0.00,
@@ -143,13 +144,23 @@ function conectarFirebase() {
 // ==================================================================================
 // LÓGICA DE LOGIN STEAM E AUTENTICAÇÃO
 // ==================================================================================
-function efetuarLoginInterface(steamId) {
+async function efetuarLoginInterface(steamId) {
     estado.logadoSteam = true;
     estado.steamId = steamId;
     localStorage.setItem('steam_user', steamId);
 
-    // Conecta ao Firebase para buscar os dados deste usuário
+    // Conecta ao Firebase para escutar os dados em tempo real
     conectarFirebase();
+
+    // Busca o Nome atualizado do usuário através da nossa rota do Backend
+    try {
+        const resposta = await fetch(`${URL_API}/api/steam-perfil/${steamId}`);
+        const dadosSteam = await resposta.json();
+        estado.steamName = dadosSteam.steamName || "Usuário Steam";
+    } catch (e) {
+        estado.steamName = "Usuário Steam";
+        console.error("Não foi possível carregar o nome da Steam:", e);
+    }
 
     if (el.steamBtn) el.steamBtn.textContent = "[ LOGOUT ]";
     if (el.steamWarning) el.steamWarning.classList.add('hidden');
@@ -158,29 +169,34 @@ function efetuarLoginInterface(steamId) {
         el.statusIndicator.classList.remove('offline');
         el.statusIndicator.classList.add('online');
     }
-    if (el.steamStatus) el.steamStatus.textContent = "USER_AUTENTICADO";
+    
+    // Substitui o texto de status pelo Nome da Steam do usuário
+    if (el.steamStatus) el.steamStatus.textContent = estado.steamName;
+
+    // Força a atualização do painel de tiers com os novos dados
+    atualizarTierUsuario();
 }
 
-function inicializarLoginSteam() {
-    el.steamBtn?.addEventListener('click', (e) => {
-        if (!estado.logadoSteam) {
-            e.preventDefault();
-            window.location.href = STEAM_OPENID_URL;
-        } else {
-            localStorage.removeItem('steam_user');
-            window.location.reload();
-        }
-    });
+function atualizarTierUsuario() {
+    let tierAtualNome = "NENHUM";
+    let corTier = "#6b7280"; // Cinza padrão
     
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.has('openid.identity')) {
-        const identityUrl = urlParams.get('openid.identity');
-        const steamIdReal = identityUrl.split('/').pop();
-        efetuarLoginInterface(steamIdReal);
-        window.history.replaceState({}, document.title, window.location.pathname);
+    if (estado.totalDoadoPeloUsuario >= 500) { tierAtualNome = "DIAMANTE"; corTier = "#00f2ff"; }
+    else if (estado.totalDoadoPeloUsuario >= 100) { tierAtualNome = "PLATINA"; corTier = "#b026ff"; }
+    else if (estado.totalDoadoPeloUsuario >= 50) { tierAtualNome = "OURO"; corTier = "#ffd700"; }
+    else if (estado.totalDoadoPeloUsuario >= 20) { tierAtualNome = "BRONZE"; corTier = "#cd7f32"; }
+
+    if (el.currentTier) {
+        el.currentTier.innerHTML = `
+            <div style="margin-bottom: 0.5rem; border-bottom: 1px solid var(--panel-border); padding-bottom: 0.5rem;">
+                <span style="color: var(--text-muted);">SISTEMA_USER:</span> ${estado.steamName}<br>
+                <span style="color: var(--text-muted);">STEAM_ID:</span> <small style="font-size: 11px;">${estado.steamId || '---'}</small>
+            </div>
+            <div>SEU TIER ATUAL: <span style="color:${corTier}; font-weight:700;">${tierAtualNome}</span></div>
+            <div style="font-size: 0.9rem; margin-top: 0.3rem;">TOTAL CONTRIBUÍDO: <span class="highlight-green">${formatarMoeda(estado.totalDoadoPeloUsuario)}</span></div>
+        `;
     }
 }
-
 // ==================================================================================
 // LÓGICA DE PIX E MODAL (COM QR CODE UNIVERSAL)
 // ==================================================================================
