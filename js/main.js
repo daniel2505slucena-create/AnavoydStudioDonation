@@ -291,8 +291,29 @@ el.confirmPixBtn?.addEventListener('click', async () => {
         const resultado = await resposta.json();
         
         if (resultado.pago) {
-            alert("SUCESSO: Pagamento confirmado e Tier atualizado!");
-            fecharModalPix();
+            // Transforma o modal do Pix na tela de sucesso com o seu link do Discord
+            const modalContent = document.querySelector('#pixModal .modal-content');
+            if (modalContent) {
+                modalContent.innerHTML = `
+                    <div class="modal-header">
+                        <h3>> UPLINK_SUCESSO</h3>
+                        <button onclick="window.location.reload()" class="close-btn">[X]</button>
+                    </div>
+                    <div style="text-align: center; padding: 1.5rem 0;">
+                        <span class="status-indicator online" style="display: inline-block; margin-bottom: 1rem;"></span>
+                        <p class="highlight-green" style="font-size: 1.3rem; font-weight: 700; margin-bottom: 1rem; letter-spacing: 2px;">
+                            > ACESSO_CONCEDIDO
+                        </p>
+                        <p style="color: var(--text-main); margin-bottom: 2rem; font-size: 0.9rem;">
+                            SEU PIX FOI CONFIRMADO E SEU TIER JÁ FOI ATUALIZADO COM SUCESSO.
+                        </p>
+                        
+                        <a href="https://discord.gg/3AExjcdCvp" target="_blank" class="cyber-btn confirm-btn" style="display: block; text-decoration: none; text-align: center; padding: 1rem; background: rgba(57, 255, 20, 0.1); border-color: var(--neon-green); color: var(--neon-green);">
+                            > ENTRAR_NO_SERVIDOR_DO_PROJETO
+                        </a>
+                    </div>
+                `;
+            }
         } else {
             alert("Aguardando confirmação bancária...");
             el.confirmPixBtn.textContent = "> CONFIRMAR_PAGAMENTO";
@@ -301,13 +322,6 @@ el.confirmPixBtn?.addEventListener('click', async () => {
         alert("Erro na rede. Verifique sua conexão."); 
         el.confirmPixBtn.textContent = "> CONFIRMAR_PAGAMENTO";
     }
-});
-
-el.closePixBtn?.addEventListener('click', fecharModalPix);
-
-el.pixKeyDisplay?.addEventListener('click', () => {
-    navigator.clipboard.writeText(el.pixKeyDisplay.value);
-    alert("COPIADO PARA O CLIPBOARD!");
 });
 
 // ==================================================================================
