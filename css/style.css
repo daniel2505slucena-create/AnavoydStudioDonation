@@ -52,7 +52,7 @@ body {
 .bg-back-image {
     position: fixed;
     top: 0; left: 0; width: 100vw; height: 100vh;
-    background-image: url('../images/antirealidadecoraçãoambissal.png');
+    background-image: url('../images/amarelo.gif');
     background-size: cover;
     background-position: center;
     opacity: 0.03; /* Quase uma marca d'água */
