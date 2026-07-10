@@ -1,67 +1,83 @@
 :root {
-    /* Paleta Aconchegante: Café, Creme, Caramelo e Mel */
-    --bg-base: #F9F6F0; /* Fundo creme claro (Espuma de leite) */
-    --panel-bg: rgba(255, 255, 255, 0.85); /* Painéis claros e levemente translúcidos */
-    --panel-border: #E2D5C8; /* Borda macia pastel */
+    /* ==========================================
+       MODO ESCURO (Padrão) - Preto e Amarelo Café
+       ========================================== */
+    --bg-base: #121110; /* Preto grão de café torrado */
+    --panel-bg: rgba(26, 24, 23, 0.95); /* Painéis pretos quentes */
+    --panel-border: #2E2925; /* Borda sutil cor de canela escura */
     
-    --neon-yellow: #E8A81C; /* Amarelo Mostarda / Caramelo Quente */
-    --neon-yellow-glow: rgba(232, 168, 28, 0.2);
-    --accent-gold: #C07F00; /* Tom de mel/âmbar para contraste */
-    --accent-gold-glow: rgba(192, 127, 0, 0.2);
-    --alert-red: #D9534F; /* Vermelho suave para erros */
+    --neon-yellow: #FFB703; /* Amarelo Mel/Âmbar aconchegante e forte */
+    --neon-yellow-glow: rgba(255, 183, 3, 0.2);
+    --accent-gold: #FB8500; /* Toque de ouro/caramelo escuro */
+    --accent-gold-glow: rgba(251, 133, 0, 0.2);
+    --alert-red: #D9534F;
     
-    --text-main: #4A3B32; /* Marrom escuro (Grão de café) */
-    --text-muted: #8D7B68; /* Marrom acinzentado suave */
+    --text-main: #F4F1EA; /* Texto claro esbranquiçado */
+    --text-muted: #968A81; /* Texto secundário camurça */
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
+/* Transição suave ao mudar entre os modos */
+body.light-mode {
+    /* ==========================================
+       MODO CLARO - Creme e Amarelo Quente
+       ========================================== */
+    --bg-base: #FDFBF7; /* Fundo creme/espuma de leite */
+    --panel-bg: rgba(255, 255, 255, 0.96); /* Painéis brancos limpos */
+    --panel-border: #E6DFD5; /* Borda suave pastel */
+    
+    --neon-yellow: #E59400; /* Amarelo mais denso para contraste no fundo claro */
+    --accent-gold: #B36B00;
+    
+    --text-main: #1C1A18; /* Texto preto café expresso */
+    --text-muted: #73675E;
+}
+
+* { 
+    box-sizing: border-box; 
+    margin: 0; 
+    padding: 0; 
+}
 
 body {
     background-color: var(--bg-base);
     color: var(--text-main);
-    font-family: 'Quicksand', sans-serif; /* Fonte amigável e limpa */
-    font-size: 15px;
-    text-transform: none; /* Removemos o ALL CAPS para um tom conversacional */
-    line-height: 1.7;
+    font-family: 'Quicksand', sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
     overflow-x: hidden;
+    /* Aplica efeito suave na troca de tema */
+    transition: background-color 0.4s ease, color 0.4s ease;
 }
 
-/* -----------------------------------------
-   --- CONFIGURAÇÃO DA IMAGEM DE FUNDO ---
-   ----------------------------------------- */
+/* Imagem de Fundo Adaptável */
 .bg-back-image {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
+    top: 0; left: 0; width: 100vw; height: 100vh;
     background-image: url('../images/antirealidadecoraçãoambissal.png');
     background-size: cover;
     background-position: center;
-    background-repeat: no-repeat;
-    opacity: 0.15; /* Mais opaco para não roubar a atenção */
-    filter: sepia(0.4) warm(0.2); /* Truque para deixar a imagem mais quente */
+    opacity: 0.08;
     z-index: -1;   
-    pointer-events: none; 
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+}
+body.light-mode .bg-back-image {
+    opacity: 0.04; /* Ainda mais sutil no modo claro */
 }
 
-/* Utilitários JS */
+/* Efeitos antigos desativados para o clima relaxante */
+.crt-overlay, .vignette { display: none !important; }
+
+/* Utilitários */
 .hidden { display: none !important; }
-.disabled { opacity: 0.4; pointer-events: none; filter: grayscale(80%); }
+.disabled { opacity: 0.4; pointer-events: none; filter: grayscale(50%); }
 
-/* CRT Overlay e Efeitos Visuais (Desativados para o clima relaxado) */
-.crt-overlay, .vignette {
-    display: none !important;
-}
-
-/* Layout Principal */
+/* Estrutura Principal */
 .terminal-container {
     width: 95%;
-    max-width: 1200px; /* Um pouco mais estreito para facilitar a leitura */
+    max-width: 1100px;
     margin: 0 auto;
-    padding: 2rem 0;
-    position: relative;
-    z-index: 10;
+    padding: 2.5rem 0;
 }
 
 .sys-header {
@@ -69,65 +85,68 @@ body {
     justify-content: space-between;
     align-items: center;
     padding-bottom: 1.5rem;
-    margin-bottom: 2rem;
+    margin-bottom: 2.5rem;
     border-bottom: 2px solid var(--panel-border);
-    position: relative;
-    gap: 1.5rem;
-}
-
-.sys-header::after {
-    content: '';
-    position: absolute;
-    bottom: -2px; left: 0;
-    width: 250px;
-    height: 2px;
-    background: var(--accent-gold);
 }
 
 .brand-img {
-    width: 180px;
-    max-width: 100%;
-    /* Removido o drop-shadow forte */
+    height: 45px;
+    width: auto;
 }
 
 .auth-box {
     display: flex;
     align-items: center;
     gap: 1rem;
-    background: var(--panel-bg);
-    padding: 0.6rem 1.2rem;
+}
+
+/* Botão de Troca de Tema Dinâmico */
+.theme-btn {
+    background: transparent;
     border: 1px solid var(--panel-border);
-    border-radius: 30px; /* Arredondado */
-    white-space: nowrap;
-    box-shadow: 0 4px 12px rgba(74, 59, 50, 0.05);
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+    border-radius: 20px;
+    color: var(--text-muted);
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+.theme-btn:hover {
+    border-color: var(--neon-yellow);
+    color: var(--neon-yellow);
+    background: rgba(255, 183, 3, 0.05);
 }
 
 .status-indicator {
-    width: 10px;
-    height: 10px;
+    width: 8px;
+    height: 8px;
     border-radius: 50%;
-    flex-shrink: 0;
 }
-.status-indicator.offline { background-color: var(--alert-red); animation: pulse 2s infinite; }
-.status-indicator.online { background-color: var(--neon-yellow); box-shadow: 0 0 8px var(--neon-yellow-glow); }
+.status-indicator.offline { background-color: var(--alert-red); }
+.status-indicator.online { background-color: var(--neon-yellow); }
 
-.sys-text { color: var(--text-muted); font-weight: 700; font-size: 0.9rem; }
-.sys-text.online-text { color: var(--accent-gold); }
+.sys-text {
+    font-weight: 700;
+    color: var(--text-muted);
+}
 
-/* Painéis Aconchegantes (Antigo Cyberpunk) */
+/* Painéis Estilo Lousa/Café */
 .cyber-panel {
     background: var(--panel-bg);
     border: 1px solid var(--panel-border);
+    border-radius: 14px; /* Cantos arredondados e amigáveis */
     padding: 2rem;
-    position: relative;
-    border-radius: 16px; /* Bordas arredondadas ao invés do clip-path */
-    backdrop-filter: blur(8px);
-    box-shadow: 0 8px 24px rgba(74, 59, 50, 0.06); /* Sombra difusa e quente */
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    transition: background-color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+}
+body.light-mode .cyber-panel {
+    box-shadow: 0 10px 30px rgba(28, 25, 24, 0.05);
 }
 
 /* Cores de destaque lateral */
-.block-green { border-left: 6px solid var(--neon-yellow); }
-.block-purple { border-left: 6px solid var(--accent-gold); }
+.block-green { border-left: 4px solid var(--neon-yellow); }
+.block-purple { border-left: 4px solid var(--accent-gold); }
 
 .grid-layout {
     display: grid;
@@ -138,283 +157,231 @@ body {
 .card { margin-bottom: 2rem; }
 
 h2, h3 {
-    font-family: 'Merriweather', serif; /* Fonte com serifa para títulos */
     font-weight: 700;
-    margin-bottom: 1.5rem;
-    color: var(--accent-gold);
+    color: var(--neon-yellow);
+    margin-bottom: 1.2rem;
+    letter-spacing: 0.5px;
 }
 
-.highlight-purple { color: var(--accent-gold); font-weight: 700; }
-.highlight-green { color: var(--neon-yellow); font-weight: 700; }
+.panel-desc {
+    color: var(--text-main);
+    font-size: 0.95rem;
+    white-space: pre-line;
+}
 
+/* Cursor piscante */
 .cursor {
-    display: inline-block;
-    width: 8px;
-    height: 1.2em;
-    background-color: var(--neon-yellow);
-    vertical-align: middle;
-    animation: blink 1.5s step-end infinite; /* Piscar mais lento e suave */
-    margin-left: 5px;
-    border-radius: 4px;
+    color: var(--neon-yellow);
+    animation: blink 1s step-end infinite;
+    font-weight: bold;
 }
 
-/* Barra de Progresso */
-.progress-card { 
-    margin-bottom: 2rem; 
-    padding: 2.5rem; 
-    text-align: center;
-}
-
+/* Barra de Progresso Customizada */
+.progress-card { text-align: center; }
 .bar-container {
-    position: relative;
-    height: 20px;
-    background: #EAE3D9; /* Fundo da barra macio */
-    border-radius: 10px;
+    height: 14px;
+    background: var(--bg-base);
+    border: 1px solid var(--panel-border);
+    border-radius: 20px;
     margin: 1.5rem 0;
+    position: relative;
     overflow: hidden;
 }
-
-.bar-track {
-    display: none; /* Removido o estilo zebrado */
-}
-
 .bar-fill {
     height: 100%;
-    background: linear-gradient(90deg, var(--neon-yellow), var(--accent-gold)); /* Degradê quente */
-    position: relative;
-    transition: width 0.8s ease-out;
-    border-radius: 10px;
+    background: linear-gradient(90deg, var(--neon-yellow), var(--accent-gold));
+    border-radius: 20px;
+    width: 0%;
+    transition: width 0.6s ease;
 }
-
 .meta-stats {
     display: flex;
     justify-content: space-between;
-    font-size: 1.2rem;
     font-weight: 700;
-    font-family: 'Merriweather', serif;
+    font-size: 1.1rem;
 }
+.stat-value { color: var(--text-main); }
+.highlight-green { color: var(--neon-yellow) !important; }
+.highlight-purple { color: var(--accent-gold) !important; }
 
-/* Botões */
+/* Botões do Sistema */
 .cyber-btn {
     background: transparent;
     border: 2px solid var(--neon-yellow);
-    border-radius: 20px; /* Formato de pílula */
-    color: var(--text-main);
-    font-family: 'Quicksand', sans-serif;
+    border-radius: 25px; /* Formato pílula confortável */
+    color: var(--neon-yellow);
+    padding: 0.6rem 1.2rem;
     font-weight: 700;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.25s ease;
+}
+.cyber-btn:hover {
+    background: var(--neon-yellow);
+    color: var(--bg-base) !important; /* Inverte dinamicamente com o fundo atual */
+    box-shadow: 0 4px 15px var(--neon-yellow-glow);
 }
 
-.auth-btn { 
-    border: none; 
-    padding: 0.2rem 0.5rem; 
-    color: var(--text-muted); 
-    font-size: 0.9rem;
+.auth-btn {
+    border-width: 1px;
+    padding: 0.4rem 1rem;
+    font-size: 0.85rem;
 }
-.auth-btn:hover { color: var(--accent-gold); background: transparent; }
 
 .pix-btns {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 12px;
+    gap: 10px;
     margin-top: 1.5rem;
-    transition: all 0.3s ease;
 }
-
 .btn-pix {
-    padding: 0.8rem 0.5rem;
+    padding: 0.7rem 0.5rem;
+    font-size: 0.9rem;
     border-color: var(--panel-border);
     color: var(--text-main);
-    background: var(--bg-base);
 }
-
 .btn-pix:hover {
-    background: var(--neon-yellow);
     border-color: var(--neon-yellow);
-    color: #fff;
-    box-shadow: 0 4px 12px var(--neon-yellow-glow);
+}
+.btn-pix.custom {
+    border-color: var(--accent-gold);
+    color: var(--accent-gold);
+}
+.btn-pix.custom:hover {
+    background: var(--accent-gold);
+    color: var(--bg-base) !important;
 }
 
-.btn-pix.custom { color: var(--accent-gold); border-color: var(--accent-gold); }
-.btn-pix.custom:hover { background: var(--accent-gold); border-color: var(--accent-gold); color: #fff; }
-
-/* Avisos e Listas */
+/* Caixas de Aviso e Listas */
 .warning-box {
-    background: rgba(217, 83, 79, 0.1);
-    border-left: 4px solid var(--alert-red);
-    border-radius: 0 8px 8px 0;
+    background: rgba(219, 83, 79, 0.08);
+    border: 1px solid rgba(219, 83, 79, 0.3);
     color: var(--alert-red);
     padding: 1rem;
+    border-radius: 8px;
     margin-bottom: 1.5rem;
-    font-weight: 700;
+    font-size: 0.9rem;
 }
+.warning-icon { font-weight: 800; margin-right: 5px; }
 
+.tier-list { display: flex; flex-direction: column; gap: 0.8rem; }
 .tier-item {
     display: flex;
     justify-content: space-between;
-    padding: 1rem 0;
-    border-bottom: 1px solid var(--panel-border); /* Trocado de dashed para solid */
-    gap: 1rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 1px dashed var(--panel-border);
 }
-
-.tier-name { color: var(--accent-gold); font-weight: 700; white-space: nowrap; }
-.tier-desc { color: var(--text-muted); text-align: right; }
-
-.tier-status { 
-    margin-top: 1.5rem; 
-    padding-top: 1.5rem; 
-    border-top: 2px solid var(--panel-border); 
-    color: var(--text-main); 
+.tier-name { color: var(--neon-yellow); font-weight: 700; }
+.tier-desc { color: var(--text-muted); }
+.tier-status {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--panel-border);
     font-weight: 700;
 }
 
-.highlight-list { list-style: none; padding-left: 0.5rem; }
-.highlight-list li { padding: 0.5rem 0; color: var(--text-main); position: relative; padding-left: 1.5rem; }
-.highlight-list li::before { 
-    content: '☕'; /* Trocado o '>' por um ícone aconchegante, pode mudar se quiser */
-    position: absolute;
-    left: 0;
-    font-size: 0.9rem;
-    color: var(--accent-gold); 
+/* Forçar cores do JS antigo a respeitarem nosso tema usando CSS avançado */
+#currentTier span[style], .status-null { 
+    color: var(--neon-yellow) !important; 
 }
 
-/* Estrutura do Modal PIX */
+.highlight-list { list-style: none; }
+.highlight-list li {
+    position: relative;
+    padding-left: 1.2rem;
+    margin-bottom: 0.5rem;
+    color: var(--text-main);
+}
+.highlight-list li::before {
+    content: "•";
+    color: var(--neon-yellow);
+    font-weight: bold;
+    position: absolute;
+    left: 0;
+}
+
+/* Modais */
 .modal {
     position: fixed;
     top: 0; left: 0; width: 100vw; height: 100vh;
-    background: rgba(74, 59, 50, 0.6); /* Fundo escuro quente */
-    backdrop-filter: blur(8px);
-    z-index: 2000;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 1000;
 }
-
-.modal-content { 
-    width: 90%; 
-    max-width: 450px; 
-    background: #fff; /* Modal bem limpo */
+.modal-content {
+    width: 90%;
+    max-width: 420px;
 }
-
 .modal-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1.5rem;
-    border-bottom: 1px solid var(--panel-border);
-    padding-bottom: 1rem;
 }
-
-.close-btn { 
-    background: rgba(217, 83, 79, 0.1); 
-    border: none; 
-    color: var(--alert-red); 
-    cursor: pointer; 
-    font-family: 'Quicksand', sans-serif; 
-    font-size: 1rem; 
+.close-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
     font-weight: 700;
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
+    cursor: pointer;
+}
+.close-btn:hover { color: var(--alert-red); }
+
+.qr-box {
+    background: #fff;
+    padding: 1rem;
+    border-radius: 8px;
+    width: max-content;
+    margin: 0 auto 1.5rem auto;
+}
+.qr-box canvas, .qr-box img { display: block; margin: 0 auto; }
+
+.input-group {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background 0.3s;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
 }
-.close-btn:hover { background: var(--alert-red); color: #fff; }
-
-.qr-box { 
-    background: #fff; 
-    padding: 1rem; 
-    width: max-content; 
-    margin: 0 auto 1.5rem auto; 
-    border: 2px solid var(--panel-border); 
-    border-radius: 12px;
-}
-.qr-box canvas, .qr-box img { display: block; margin: 0 auto; border-radius: 8px; }
-
-.input-group { display: flex; flex-direction: column; margin-bottom: 1.5rem; }
-.input-group label { color: var(--text-muted); margin-bottom: 0.5rem; font-size: 0.9rem; font-weight: 700; }
-.cyber-input { 
-    background: var(--bg-base); 
-    border: 1px solid var(--panel-border); 
-    color: var(--text-main); 
-    padding: 1rem; 
-    font-family: 'Quicksand', sans-serif; 
+.input-group label {
     font-weight: 700;
-    width: 100%; 
-    outline: none; 
-    border-radius: 12px;
+    color: var(--text-muted);
+    font-size: 0.85rem;
 }
+.cyber-input {
+    background: var(--bg-base);
+    border: 1px solid var(--panel-border);
+    border-radius: 8px;
+    padding: 0.8rem;
+    color: var(--text-main);
+    font-family: inherit;
+    width: 100%;
+    outline: none;
+}
+.cyber-input:focus { border-color: var(--neon-yellow); }
 
-.confirm-btn {
-    width: 100%; 
-    background: var(--accent-gold); 
-    border-color: var(--accent-gold); 
-    color: #fff; 
-    padding: 1rem; 
-    font-size: 1.1rem;
+.confirm-btn { width: 100%; margin-top: 0.5rem; }
+
+/* Injeções de Sucesso do Discord vindas do JS antigo (Forçar visual limpo) */
+div[style*="background: rgba(57, 255, 20"] {
+    background: var(--panel-bg) !important;
+    border-color: var(--neon-yellow) !important;
 }
-.confirm-btn:hover { 
-    background: var(--neon-yellow); 
-    border-color: var(--neon-yellow); 
+a[style*="color: var(--neon-green)"] {
+    background: transparent !important;
+    border-color: var(--accent-gold) !important;
+    color: var(--accent-gold) !important;
+}
+a[style*="color: var(--neon-green)"]:hover {
+    background: var(--accent-gold) !important;
+    color: var(--bg-base) !important;
 }
 
 @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
-@keyframes pulse { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.8; transform: scale(1.2); } 100% { opacity: 1; transform: scale(1); } }
 
-/* ==================================================
-   --- REGRAS DE RESPONSIVIDADE (MEDIA QUERIES) ---
-   ================================================== */
-
-@media (max-width: 1024px) {
-    .grid-layout {
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
-    }
-}
-
-@media (max-width: 640px) {
-    body { font-size: 14px; }
-    
-    .terminal-container {
-        width: 92%;
-        padding: 1rem 0;
-    }
-
-    .sys-header {
-        flex-direction: column;
-        align-items: center;
-        gap: 1rem;
-        text-align: center;
-    }
-
-    .sys-header::after { left: 50%; transform: translateX(-50%); }
-
-    .auth-box {
-        width: 100%;
-        justify-content: center;
-    }
-
-    .progress-card { padding: 1.5rem; }
-    
-    .meta-stats { font-size: 1.1rem; }
-
-    .pix-btns {
-        grid-template-columns: repeat(2, 1fr); 
-    }
-
-    .tier-item {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.5rem;
-        padding: 0.8rem 0;
-    }
-
-    .tier-desc { text-align: left; }
-    
-    .modal-content {
-        padding: 1.5rem;
-    }
+/* Responsividade Básica */
+@media (max-width: 850px) {
+    .grid-layout { grid-template-columns: 1fr; gap: 1rem; }
+    .pix-btns { grid-template-columns: repeat(2, 1fr); }
 }
