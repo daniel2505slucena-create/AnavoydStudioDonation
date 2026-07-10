@@ -1,35 +1,24 @@
 :root {
-    /* ==========================================
-       MODO ESCURO - Noite Calma (Grafite e Mel)
-       ========================================== */
-    --bg-base: #1A1918; /* Grafite quente e fosco, muito confortável para os olhos */
-    --panel-bg: #242220; /* Fundo dos painéis levemente mais claro */
-    --panel-border: rgba(255, 255, 255, 0.03); /* Borda quase invisível */
+    /* Paleta inspirada na imagem de referência */
+    --bg-base: #141414; /* Fundo principal escuro e calmo */
+    --panel-bg: #202020; /* Fundo dos painéis levemente destacado */
+    --panel-border: #2E2E2E; /* Bordas muito sutis */
     
-    --neon-yellow: #E5C07B; /* Amarelo mel, calmo e pastel */
-    --neon-yellow-glow: rgba(229, 192, 123, 0.1); /* Brilho muito difuso e suave */
-    --accent-gold: #C29A5B; /* Um tom de areia escurecida para suporte */
+    --accent-gold: #E5C378; /* Dourado suave e calmo da imagem */
+    --accent-gold-glow: rgba(229, 195, 120, 0.1);
     
-    --alert-red: #E07A5F; /* Vermelho terracota (menos agressivo que o vermelho padrão) */
-    
-    --text-main: #E8E4DF; /* Branco perolado, não cansa a vista */
-    --text-muted: #95908A; /* Cinza quente para textos secundários */
+    --text-main: #E0E0E0; /* Texto claro confortável */
+    --text-muted: #9E9E9E; /* Texto secundário */
+    --alert-red: #D9534F;
 }
 
-/* Transição muito suave ao mudar entre os modos */
 body.light-mode {
-    /* ==========================================
-       MODO CLARO - Manhã Calma (Creme e Girassol)
-       ========================================== */
-    --bg-base: #F7F5F0; /* Fundo creme super leve */
-    --panel-bg: #FFFFFF; /* Painéis brancos limpos */
-    --panel-border: rgba(0, 0, 0, 0.04);
-    
-    --neon-yellow: #D49A36; /* Amarelo outonal escuro para garantir leitura */
-    --accent-gold: #B58026;
-    
-    --text-main: #423E3B; /* Cinza chumbo profundo (nunca preto puro) */
-    --text-muted: #8A847E;
+    --bg-base: #F5F5F5;
+    --panel-bg: #FFFFFF;
+    --panel-border: #E0E0E0;
+    --accent-gold: #B8860B;
+    --text-main: #222222;
+    --text-muted: #666666;
 }
 
 * { 
@@ -42,75 +31,65 @@ body {
     background-color: var(--bg-base);
     color: var(--text-main);
     font-family: 'Quicksand', sans-serif;
-    font-size: 15px; /* Fonte levemente maior para leitura mais relaxada */
-    line-height: 1.7; /* Mais espaço entre as linhas */
+    font-size: 15px;
+    line-height: 1.7;
     overflow-x: hidden;
-    transition: background-color 0.6s ease, color 0.6s ease; /* Transição desacelerada */
+    transition: background-color 0.4s ease, color 0.4s ease;
 }
 
-/* Imagem de Fundo Adaptável e Sutil */
+/* Fundo sutil */
 .bg-back-image {
     position: fixed;
     top: 0; left: 0; width: 100vw; height: 100vh;
-    background-image: url('../images/amarelo.gif');
+    background-image: url('../images/antirealidadecoraçãoambissal.png');
     background-size: cover;
     background-position: center;
-    opacity: 0.03; /* Quase uma marca d'água */
+    opacity: 0.02;
     z-index: -1;   
     pointer-events: none;
-    transition: opacity 0.6s ease;
-}
-body.light-mode .bg-back-image {
-    opacity: 0.02;
 }
 
-/* Utilitários */
 .hidden { display: none !important; }
-.disabled { opacity: 0.4; pointer-events: none; filter: grayscale(30%); }
+.disabled { opacity: 0.4; pointer-events: none; filter: grayscale(50%); }
 
-/* Estrutura Principal */
+/* Contêiner mais largo para dar espaço nas laterais */
 .terminal-container {
-    width: 95%;
-    max-width: 1000px; /* Largura um pouco menor para parágrafos confortáveis */
+    width: 92%;
+    max-width: 1350px; /* Expandido para abraçar mais a tela */
     margin: 0 auto;
     padding: 3rem 0;
 }
 
+/* Header amplo igual à imagem */
 .sys-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding-bottom: 2rem;
     margin-bottom: 3rem;
-    border-bottom: 1px solid var(--panel-border);
 }
 
 .brand-img {
-    height: 40px;
+    height: 45px;
     width: auto;
-    opacity: 0.9;
 }
 
 .auth-box {
     display: flex;
     align-items: center;
-    gap: 1.2rem;
+    gap: 1.5rem;
 }
 
-/* Botão de Troca de Tema (Zen) */
 .theme-btn {
     background: transparent;
     border: none;
-    padding: 0.5rem 1rem;
-    font-size: 0.9rem;
     color: var(--text-muted);
     font-weight: 700;
+    font-size: 0.9rem;
     cursor: pointer;
-    transition: color 0.4s ease;
+    transition: color 0.3s;
 }
-.theme-btn:hover {
-    color: var(--neon-yellow);
-}
+.theme-btn:hover { color: var(--accent-gold); }
 
 .status-indicator {
     width: 8px;
@@ -118,147 +97,190 @@ body.light-mode .bg-back-image {
     border-radius: 50%;
 }
 .status-indicator.offline { background-color: var(--alert-red); }
-.status-indicator.online { background-color: var(--neon-yellow); }
+.status-indicator.online { background-color: var(--accent-gold); }
 
 .sys-text {
     font-weight: 500;
     color: var(--text-muted);
 }
 
-/* Painéis Suaves */
+/* Botões do Topo */
+.cyber-btn {
+    background: transparent;
+    border: 1px solid var(--panel-border);
+    border-radius: 6px;
+    color: var(--text-main);
+    padding: 0.6rem 1.2rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+.cyber-btn:hover {
+    border-color: var(--accent-gold);
+    color: var(--accent-gold);
+}
+
+/* Painéis principais idênticos à imagem */
 .cyber-panel {
     background: var(--panel-bg);
     border: 1px solid var(--panel-border);
-    border-radius: 20px; /* Bordas bem redondas e amigáveis */
-    padding: 2.5rem; /* Mais respiro interno */
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05); /* Sombra difusa e elegante */
-    transition: all 0.5s ease;
-}
-body.light-mode .cyber-panel {
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.02);
+    border-radius: 16px;
+    padding: 3rem; /* Bastante respiro interno */
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
 }
 
-/* Linha lateral de destaque muito sutil */
-.block-green { border-left: 3px solid var(--neon-yellow); }
-.block-purple { border-left: 3px solid var(--accent-gold); }
+/* Borda lateral dourada como na imagem */
+.gold-border {
+    border-left: 3px solid var(--accent-gold);
+    border-top: 1px solid var(--panel-border);
+    border-right: 1px solid var(--panel-border);
+    border-bottom: 1px solid var(--panel-border);
+}
 
+/* Layout em Grid (2 Colunas perfeitas) */
 .grid-layout {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 2.5rem;
+    gap: 2rem;
+    margin-top: 2rem;
 }
 
-.card { margin-bottom: 2.5rem; }
+.card { margin-bottom: 2rem; }
 
+/* Tipografia */
 h2, h3, h4 {
     font-weight: 700;
-    color: var(--text-main); /* Títulos na cor principal para manter a calma */
-    margin-bottom: 1rem;
-    letter-spacing: 0.2px;
+    margin-bottom: 1.5rem;
+    letter-spacing: 0.5px;
 }
 
-/* A cor de destaque agora é usada com mais cautela */
-.panel-title {
-    color: var(--neon-yellow);
-    font-size: 1.3rem;
+.panel-title, .glitch-text {
+    color: var(--text-main);
+    font-size: 1.2rem;
 }
 
 .panel-desc {
     color: var(--text-main);
-    font-size: 1rem;
+    font-size: 0.95rem;
     white-space: pre-line;
-    opacity: 0.9;
+    line-height: 1.8;
 }
 
-/* Barra de Progresso Calma */
-.progress-card { text-align: center; }
-.bar-container {
-    height: 12px;
-    background: var(--bg-base);
-    border-radius: 20px;
-    margin: 2rem 0;
-    position: relative;
-    overflow: hidden;
-    box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+.highlight-purple { color: var(--accent-gold) !important; font-weight: 700; }
+
+/* Cursor piscante original */
+.cursor {
+    color: var(--accent-gold);
+    animation: blink 1s step-end infinite;
 }
+
+/* Barra de Progresso Fina e Elegante da imagem */
+.progress-card { 
+    text-align: center; 
+    padding: 4rem 2rem; 
+}
+.bar-container {
+    height: 6px; /* Barra fina */
+    background: #111; /* Fundo bem escuro */
+    border-radius: 10px;
+    margin: 2.5rem 0 1rem 0;
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+body.light-mode .bar-container { background: #E0E0E0; }
+
 .bar-fill {
     height: 100%;
-    background: var(--neon-yellow);
-    border-radius: 20px;
+    background: var(--accent-gold);
+    border-radius: 10px;
     width: 0%;
-    transition: width 1s ease-out; /* Preenchimento fluido e demorado */
+    transition: width 1s ease-out;
+    position: relative;
 }
+/* A "bolinha" na ponta da barra de progresso */
+.bar-fill::after {
+    content: '';
+    position: absolute;
+    right: -6px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 12px;
+    height: 12px;
+    background: var(--accent-gold);
+    border-radius: 50%;
+}
+
 .meta-stats {
     display: flex;
     justify-content: space-between;
     font-weight: 700;
-    font-size: 1.1rem;
-}
-.stat-value { color: var(--text-muted); }
-.highlight-green { color: var(--neon-yellow) !important; }
-.highlight-purple { color: var(--accent-gold) !important; }
-
-/* Botões Arredondados e Elegantes */
-.cyber-btn {
-    background: transparent;
-    border: 1px solid var(--neon-yellow);
-    border-radius: 30px;
-    color: var(--neon-yellow);
-    padding: 0.6rem 1.5rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.4s ease; /* Hover suave */
-}
-.cyber-btn:hover {
-    background: var(--neon-yellow);
-    color: var(--bg-base) !important;
-    border-color: transparent;
-}
-
-.auth-btn {
-    padding: 0.5rem 1.2rem;
-    font-size: 0.9rem;
-    border-color: var(--panel-border);
-    color: var(--text-main);
-}
-.auth-btn:hover {
-    border-color: var(--neon-yellow);
-    background: transparent;
-    color: var(--neon-yellow) !important;
-}
-
-.pix-btns {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 12px;
-    margin-top: 2rem;
-}
-.btn-pix {
-    padding: 0.8rem 0.5rem;
-    font-size: 0.95rem;
-    border-color: var(--panel-border);
+    font-size: 1rem;
     color: var(--text-muted);
 }
+.highlight-green { color: var(--accent-gold) !important; }
+
+/* Botões de PIX arredondados da imagem */
+.pix-btns {
+    display: flex;
+    gap: 15px;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+}
+.btn-pix {
+    background: transparent;
+    border: 1px solid var(--panel-border);
+    border-radius: 30px; /* Formato pílula */
+    color: var(--text-main);
+    padding: 0.6rem 1.5rem;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    flex: 1;
+    min-width: 80px;
+    text-align: center;
+}
 .btn-pix:hover {
-    border-color: var(--neon-yellow);
-    color: var(--neon-yellow);
+    border-color: var(--accent-gold);
+    color: var(--accent-gold);
 }
 .btn-pix.custom {
     color: var(--text-main);
 }
 
-/* Caixas de Aviso e Listas */
-.warning-box {
-    background: transparent;
-    border: 1px solid rgba(224, 122, 95, 0.3);
-    color: var(--alert-red);
-    padding: 1rem 1.5rem;
-    border-radius: 12px;
-    margin-bottom: 1.5rem;
-    font-size: 0.95rem;
+/* Foto do Desenvolvedor */
+.dev-profile {
+    display: flex;
+    gap: 2rem;
+    align-items: flex-start;
 }
-.warning-icon { font-weight: 800; margin-right: 5px; }
+.dev-img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 2px solid var(--accent-gold);
+    object-fit: cover;
+    flex-shrink: 0;
+}
+.dev-info h4 {
+    color: var(--accent-gold);
+    margin-bottom: 0.5rem;
+    font-size: 1.2rem;
+}
 
+/* Caixa de Aviso */
+.warning-box {
+    background: rgba(217, 83, 79, 0.05);
+    border: 1px solid rgba(217, 83, 79, 0.2);
+    color: var(--alert-red);
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+}
+
+/* Listas e Tiers */
 .tier-list { display: flex; flex-direction: column; gap: 1rem; }
 .tier-item {
     display: flex;
@@ -266,52 +288,48 @@ h2, h3, h4 {
     padding-bottom: 0.8rem;
     border-bottom: 1px solid var(--panel-border);
 }
-.tier-name { color: var(--text-main); font-weight: 700; }
+.tier-name { color: var(--accent-gold); font-weight: 700; }
 .tier-desc { color: var(--text-muted); }
 .tier-status {
     margin-top: 2rem;
     padding-top: 1.5rem;
     border-top: 1px solid var(--panel-border);
-    font-weight: 500;
-    color: var(--text-muted);
-}
-
-#currentTier span[style], .status-null { 
-    color: var(--neon-yellow) !important; 
     font-weight: 700;
 }
 
-.highlight-list { list-style: none; padding-top: 0.5rem; }
+#currentTier span[style], .status-null { color: var(--accent-gold) !important; }
+
+.highlight-list { list-style: none; }
 .highlight-list li {
-    position: relative;
     padding-left: 1.5rem;
     margin-bottom: 0.8rem;
     color: var(--text-main);
-    opacity: 0.9;
+    position: relative;
 }
 .highlight-list li::before {
-    content: "—"; /* Hífen suave no lugar de bullets marcados */
-    color: var(--neon-yellow);
+    content: "•";
+    color: var(--accent-gold);
     position: absolute;
     left: 0;
+    font-size: 1.2rem;
+    line-height: 1;
 }
 
-/* Modais de Pagamento */
+/* Modal */
 .modal {
     position: fixed;
     top: 0; left: 0; width: 100vw; height: 100vh;
-    background: rgba(15, 14, 13, 0.85); /* Fundo escuro levemente translúcido */
-    backdrop-filter: blur(8px);
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(5px);
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 1000;
-    transition: opacity 0.4s ease;
 }
 .modal-content {
     width: 90%;
-    max-width: 400px;
-    padding: 3rem 2.5rem;
+    max-width: 450px;
+    padding: 2.5rem;
 }
 .modal-header {
     display: flex;
@@ -325,17 +343,15 @@ h2, h3, h4 {
     color: var(--text-muted);
     font-size: 1.2rem;
     cursor: pointer;
-    transition: color 0.3s ease;
 }
 .close-btn:hover { color: var(--alert-red); }
 
 .qr-box {
-    background: #ffffff;
+    background: #fff;
     padding: 1.5rem;
-    border-radius: 16px;
+    border-radius: 12px;
     width: max-content;
     margin: 0 auto 2rem auto;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
 }
 .qr-box canvas, .qr-box img { display: block; margin: 0 auto; }
 
@@ -346,43 +362,24 @@ h2, h3, h4 {
     margin-bottom: 2rem;
 }
 .input-group label {
-    font-weight: 500;
+    font-weight: 700;
     color: var(--text-muted);
-    font-size: 0.9rem;
 }
 .cyber-input {
     background: var(--bg-base);
     border: 1px solid var(--panel-border);
-    border-radius: 12px;
+    border-radius: 8px;
     padding: 1rem;
     color: var(--text-main);
-    font-family: inherit;
     width: 100%;
     outline: none;
-    transition: border-color 0.3s ease;
 }
-.cyber-input:focus { border-color: var(--neon-yellow); }
-
+.cyber-input:focus { border-color: var(--accent-gold); }
 .confirm-btn { width: 100%; }
 
-/* Suporte de Cor para as injeções do JS (Sem alterar seu arquivo JS) */
-div[style*="background: rgba(57, 255, 20"] {
-    background: var(--panel-bg) !important;
-    border-color: var(--neon-yellow) !important;
-}
-a[style*="color: var(--neon-green)"] {
-    background: transparent !important;
-    border-color: var(--accent-gold) !important;
-    color: var(--accent-gold) !important;
-}
-a[style*="color: var(--neon-green)"]:hover {
-    background: var(--accent-gold) !important;
-    color: var(--bg-base) !important;
-}
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
-/* Responsividade Básica */
-@media (max-width: 850px) {
-    .grid-layout { grid-template-columns: 1fr; gap: 1.5rem; }
-    .pix-btns { grid-template-columns: repeat(2, 1fr); }
-    .cyber-panel { padding: 1.5rem; }
+@media (max-width: 950px) {
+    .grid-layout { grid-template-columns: 1fr; }
+    .dev-profile { flex-direction: column; align-items: center; text-align: center; }
 }
