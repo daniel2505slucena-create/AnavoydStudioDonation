@@ -8,8 +8,9 @@
     <link rel="stylesheet" href="../css/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     
+    <!-- Configuração do Firebase -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
         import { getFirestore } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
@@ -40,17 +41,16 @@
                 <img src="../images/anavoyd.png" alt="Anavoyd" class="brand-img">
             </div>
             <div class="auth-box">
-                <button id="themeToggleBtn" class="theme-btn">TROCAR DE TEMA</button>
                 <span id="statusIndicator" class="status-indicator offline"></span>
-                <span id="steamStatus" class="sys-text">SISTEMA OFF</span>
-                <button id="steamBtn" class="cyber-btn auth-btn">[ CONECTADO À STEAM ]</button>
+                <span id="steamStatus" class="sys-text">SYSTEM_OFFLINE</span>
+                <button id="steamBtn" class="cyber-btn auth-btn">[ AUTH_STEAM ]</button>
             </div>
         </header>
 
         <main>
             <section class="hero">
                 <div class="progress-card cyber-panel">
-                    <h2 id="meta-title" class="glitch-text">> META PROJETO: R$ 50.000,00<span class="cursor">_</span></h2>
+                    <h2 id="meta-title" class="glitch-text">> META_PROJETO: R$ 50.000,00<span class="cursor">_</span></h2>
                     
                     <div class="bar-container">
                         <div class="bar-track"></div>
@@ -68,9 +68,9 @@
             <section class="grid-layout">
                 <div class="col">
                     <div class="card cyber-panel block-green">
-                        <h2 class="panel-title"> CONTRIBUA ANAVOYD</h2>
+                        <h2 class="panel-title">> CONTRIBUA_ANAVOYD</h2>
                         <div id="steamWarning" class="warning-box">
-                            <span class="warning-icon">!</span> CONEXÃO A STEAM NECESSÁRIA
+                            <span class="warning-icon">!</span> _AUTH_REQUIRED
                             <br><small>Faça login na Steam para habilitar doações.</small>
                         </div>
                         <p class="panel-desc">Ajude a tornar <strong class="highlight-purple">NOSSO JOGO EM</strong> uma realidade.</p>
@@ -79,35 +79,37 @@
                             <button class="btn-pix cyber-btn" data-amount="20">R$ 20</button>
                             <button class="btn-pix cyber-btn" data-amount="50">R$ 50</button>
                             <button class="btn-pix cyber-btn" data-amount="100">R$ 100</button>
-                            <button id="pixCustomBtn" class="btn-pix cyber-btn custom">OTHER</button>
+                            <button id="pixCustomBtn" class="btn-pix cyber-btn custom">_OTHER</button>
                         </div>
                     </div>
 
                     <div class="card cyber-panel block-green">
-                        <h2 class="panel-title">> SOBRE PROJETO</h2>
+                        <h2 class="panel-title">> SOBRE_PROJETO</h2>
                         <p class="panel-desc">Anavoyd Studio é um estúdio independente focado em criar experiências que unem narrativa, exploração e mecânicas envolventes. Nosso objetivo é desenvolver jogos que despertem curiosidade, desafiem o jogador e ofereçam mundos ricos em detalhes, onde cada descoberta tem significado.
 
 Acreditamos que um jogo marcante não depende apenas de gráficos, mas de sistemas bem construídos, ambientação e liberdade para o jogador explorar e criar sua própria jornada.</p>
                     </div>
                 </div>
 
-                <div class="panel cyber-panel" style="margin-top: 0rem; padding: 1.5rem;">
-                    <div class="panel-header" style="border-bottom: 1px solid var(--panel-border); padding-bottom: 0.5rem; margin-bottom: 1rem;">
-                        <h3>> SYSTEM DEVELOPER</h3>
-                    </div>
-                    <div style="display: flex; gap: 1.5rem; align-items: center; flex-wrap: wrap;">
-                        <img src="images/icon.jpg" alt="Developer Icon" style="width: 110px; height: 110px; border-radius: 50%; border: 2px solid var(--neon-yellow); object-fit: cover; box-shadow: 0 4px 15px var(--neon-yellow-glow);">
-                        
-                        <div style="flex: 1; min-width: 250px;">
-                            <h4 class="highlight-green" style="margin: 0 0 0.5rem 0; font-size: 1.2rem; letter-spacing: 1px;">
-                                Meigo
-                            </h4>
-                            <p style="color: var(--text-main); font-size: 0.95rem; line-height: 1.6; margin: 0;">
-                                Fundador do Anavoyd Studio, que iniciou com pensamento de dar um jogo de presente de aniversário para seu amigo de infância. Com essa idéia na mente, ainda mantendo seus estudos na escola técnica de TI (Tecnologia da Informação) decidiu fazer de seu TCC tudo que está vendo nesse momento.
-                            </p>
-                        </div>
-                    </div>
-                </div>
+                <!-- SEÇÃO: SOBRE O DESENVOLVEDOR -->
+<div class="panel" style="margin-top: 2rem; padding: 1.5rem;">
+    <div class="panel-header" style="border-bottom: 1px solid var(--panel-border); padding-bottom: 0.5rem; margin-bottom: 1rem;">
+        <h3>> SYSTEM_DEVELOPER</h3>
+    </div>
+    <div style="display: flex; gap: 1.5rem; align-items: center; flex-wrap: wrap;">
+        <!-- Imagem do desenvolvedor configurada com o seu caminho local -->
+        <img src="images/icon.jpg" alt="Developer Icon" style="width: 110px; height: 110px; border-radius: 50%; border: 2px solid var(--neon-green); object-fit: cover; box-shadow: 0 0 10px rgba(57, 255, 20, 0.3);">
+        
+        <div style="flex: 1; min-width: 250px;">
+            <h4 class="highlight-green" style="margin: 0 0 0.5rem 0; font-size: 1.2rem; letter-spacing: 1px;">
+                Meigo
+            </h4>
+            <p style="color: var(--text-main); font-size: 0.95rem; line-height: 1.6; margin: 0;">
+                Fundador do Anavoyd Studio, que iniciou com pensamento de dar um jogo de presente de aniversário para seu amigo de infância. Com essa idéia na mente, ainda mantendo seus estudos na escola técnica de TI (Tecnologia da Informação) decidiu fazer de seu TCC tudo que está vendo nesse momento.
+            </p>
+        </div>
+    </div>
+</div>
 
                 <div class="col">
                     <div class="card cyber-panel highlight-panel block-purple">
@@ -145,7 +147,7 @@ Acreditamos que um jogo marcante não depende apenas de gráficos, mas de sistem
     <div id="pixModal" class="modal hidden">
         <div class="modal-content cyber-panel highlight-panel">
             <div class="modal-header">
-                <h3>> UPLINK PAGAMENTO</h3>
+                <h3>> UPLINK_PAGAMENTO</h3>
                 <button id="closePixBtn" class="close-btn">[X]</button>
             </div>
             <div id="qrcode" class="qr-box"></div>
@@ -153,17 +155,11 @@ Acreditamos que um jogo marcante não depende apenas de gráficos, mas de sistem
                 <label for="pixKeyDisplay">CHAVE_PIX_CÓPIA_COLA:</label>
                 <input type="text" id="pixKeyDisplay" class="cyber-input" value="" readonly>
             </div>
-            <button id="confirmPixBtn" class="cyber-btn confirm-btn">> CONFIRMAR PAGAMENTO</button>
+            <button id="confirmPixBtn" class="cyber-btn confirm-btn">> CONFIRMAR_PAGAMENTO</button>
         </div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script type="module" src="../js/main.js"></script>
-
-    <script>
-        document.getElementById('themeToggleBtn').addEventListener('click', () => {
-            document.body.classList.toggle('light-mode');
-        });
-    </script>
 </body>
 </html>

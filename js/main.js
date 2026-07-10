@@ -96,7 +96,7 @@ function atualizarTierUsuario() {
     let corTier = "#6b7280"; 
     
     if (estado.totalDoadoPeloUsuario >= 500) { tierAtualNome = "DIAMANTE"; corTier = "#00f2ff"; }
-    else if (estado.totalDoadoPeloUsuario >= 100) { tierAtualNome = "PLATINA"; corTier = "#00ff62"; }
+    else if (estado.totalDoadoPeloUsuario >= 100) { tierAtualNome = "PLATINA"; corTier = "#b026ff"; }
     else if (estado.totalDoadoPeloUsuario >= 50) { tierAtualNome = "OURO"; corTier = "#ffd700"; }
     else if (estado.totalDoadoPeloUsuario >= 20) { tierAtualNome = "BRONZE"; corTier = "#cd7f32"; }
 
@@ -308,7 +308,7 @@ el.confirmPixBtn?.addEventListener('click', async () => {
                             SEU PIX FOI CONFIRMADO E SEU TIER JÁ FOI ATUALIZADO COM SUCESSO.
                         </p>
                         
-                        <a href="https://discord.gg/3AExjcdCvp" target="_blank" class="cyber-btn confirm-btn" style="display: block; text-decoration: none; text-align: center; padding: 1rem; background: var(--bg-base); border-color: var(--accent-gold); color: var(--accent-gold);">
+                        <a href="https://discord.gg/3AExjcdCvp" target="_blank" class="cyber-btn confirm-btn" style="display: block; text-decoration: none; text-align: center; padding: 1rem; background: rgba(57, 255, 20, 0.1); border-color: var(--neon-green); color: var(--neon-green);">
                             > ENTRAR_NO_SERVIDOR_DO_PROJETO
                         </a>
                     </div>
