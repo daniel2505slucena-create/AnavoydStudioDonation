@@ -146,7 +146,7 @@ function conectarFirebase() {
 // ==================================================================================
 // LÓGICA DE LOGIN STEAM E AUTENTICAÇÃO
 // ==================================================================================
-function efetuarLoginInterface(steamId) {
+function efectuarLoginInterface(steamId) {
     estado.logadoSteam = true;
     estado.steamId = steamId;
     localStorage.setItem('steam_user', steamId);
@@ -258,6 +258,12 @@ function fecharModalPix() {
 // ==================================================================================
 // EVENT LISTENERS E GERENCIAMENTO DE INTERAÇÃO
 // ==================================================================================
+
+// CORREÇÃO: Escuta o clique no botão [X] para fechar o modal do Pix
+el.closePixBtn?.addEventListener('click', () => {
+    fecharModalPix();
+});
+
 el.pixButtons.forEach(btn => {
     btn.addEventListener('click', (e) => {
         const targetBtn = e.currentTarget;
