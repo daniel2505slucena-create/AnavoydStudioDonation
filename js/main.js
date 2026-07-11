@@ -1,6 +1,6 @@
 /**
  * MAIN.JS - SISTEMA DE DOAÇÃO E TIER STEAM
- * VERSÃO DEFINITIVA CORRIGIDA - SEM DUPLICAÇÕES
+ * VERSÃO DEFINITIVA CORRIGIDA - LOGIN & MODAL FIX
  */
 
 import { 
@@ -146,7 +146,8 @@ function conectarFirebase() {
 // ==================================================================================
 // LÓGICA DE LOGIN STEAM E AUTENTICAÇÃO
 // ==================================================================================
-function efectuarLoginInterface(steamId) {
+// CORREÇÃO: Nome padronizado para efetuarLoginInterface (sem o 'c')
+function efetuarLoginInterface(steamId) {
     estado.logadoSteam = true;
     estado.steamId = steamId;
     localStorage.setItem('steam_user', steamId);
@@ -259,7 +260,7 @@ function fecharModalPix() {
 // EVENT LISTENERS E GERENCIAMENTO DE INTERAÇÃO
 // ==================================================================================
 
-// CORREÇÃO: Escuta o clique no botão [X] para fechar o modal do Pix
+// Evento para fechar o modal no botão [X]
 el.closePixBtn?.addEventListener('click', () => {
     fecharModalPix();
 });
